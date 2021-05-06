@@ -23,6 +23,7 @@ stages:
   - job: UnitTest
     displayName: Unit Test
     steps:
+    - checkout: camel-quarkus-gradle
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
@@ -50,6 +51,7 @@ stages:
   - job: BuildandPublish
     displayName: Build and Publish
     steps:
+    - checkout: camel-quarkus-gradle
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
