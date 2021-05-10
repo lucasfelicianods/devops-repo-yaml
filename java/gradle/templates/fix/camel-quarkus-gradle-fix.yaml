@@ -55,6 +55,7 @@ stages:
         testResultsFiles: '**/TEST-*.xml' 
         tasks: 'build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)'
     - script: |
+        sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_prd:$(tag1)'
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_prd:latest'
       displayName: Tagging
     - task: Docker@2
