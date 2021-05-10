@@ -4,13 +4,6 @@ variables:
 - group: group-macmiller
 - group: group-gittools
 
-resources:
-  repositories:
-  - repository: camel-quarkus-gradle
-    type: github
-    endpoint: ArquiteturaCorporativaLight
-    name: ArquiteturaCorporativaLight/camel-quarkus-gradle
-
 pool:
   #name: 'test-aro-agent-pool'
   vmImage: $(vmImageAZ)
