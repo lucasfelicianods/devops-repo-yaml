@@ -4,9 +4,9 @@ variables:
 - group: group-macmiller
 - group: group-gittools
 
-pool:
+#pool:
   #name: 'test-aro-agent-pool'
-  vmImage: '$(vmImageAZ)'
+  #vmImage: '$(vmImageAZ)'
 
 stages:
 
@@ -15,6 +15,8 @@ stages:
   jobs:
   - job: UnitTest
     displayName: Unit Test
+    pool:
+      vmImage: 'ubuntu-20.04'
     steps:
     - task: gitversion/setup@0
       displayName: Install GitTools
@@ -42,6 +44,8 @@ stages:
   jobs:
   - job: BuildandPublish
     displayName: Build and Publish
+    pool:
+      vmImage: 'ubuntu-20.04'
     steps:
     - task: gitversion/setup@0
       displayName: Install GitTools
