@@ -1,6 +1,3 @@
-pool:
-  vmImage: $(vmImageAZ)
-  
 stages:
 - stage: TagAndPush
   displayName: Tag And Push
@@ -8,6 +5,8 @@ stages:
   jobs:
   - job: TagAndPush
     displayName: Tag And Push
+    pool:
+      vmImage: $(vmImageAZ)
     steps:
     - task: gitversion/setup@0
       displayName: Install GitTools
