@@ -1,7 +1,3 @@
-#pool:
-  #name: 'test-aro-agent-pool'
-  #vmImage: '$(vmImageAZ)'
-
 stages:
 
 - stage: UnitTest
@@ -10,7 +6,7 @@ stages:
   - job: UnitTest
     displayName: Unit Test
     pool:
-      vmImage: 'ubuntu-20.04'
+      vmImage: '$(vmImageAZ)'
     steps:
     - task: gitversion/setup@0
       displayName: Install GitTools
@@ -39,7 +35,7 @@ stages:
   - job: BuildandPublish
     displayName: Build and Publish
     pool:
-      vmImage: 'ubuntu-20.04'
+      vmImage: '$(vmImageAZ)'
     steps:
     - task: gitversion/setup@0
       displayName: Install GitTools
