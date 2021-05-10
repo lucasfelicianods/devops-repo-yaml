@@ -56,21 +56,20 @@ stages:
         testResultsFiles: '**/TEST-*.xml' 
         tasks: 'build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)'
     - script: |
-        sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-$(tag2)'
-        sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
+        sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_prd:latest'
       displayName: Tagging
     - task: Docker@2
       displayName: Push ACR
       inputs:
         containerRegistry: '$(dockerRegistryServiceConnection)'
-        repository: '$(imageRepository)_hlg'
+        repository: '$(imageRepository)_prd'
         command: 'push'
-        tags: '$(tag1)-$(tag2)'
+        tags: '$(tag1)'
     - task: Docker@2
       displayName: Push ACR latest
       inputs:
         containerRegistry: '$(dockerRegistryServiceConnection)'
-        repository: '$(imageRepository)_hlg'
+        repository: '$(imageRepository)_prd'
         command: 'push'
         tags: 'latest'
         
