@@ -6,7 +6,7 @@ variables:
 
 pool:
   #name: 'test-aro-agent-pool'
-  vmImage: 'ubuntu-20.04'
+  vmImage: '$(vmImageAZ)'
 
 stages:
 
