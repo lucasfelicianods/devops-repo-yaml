@@ -24,7 +24,6 @@ stages:
         sudo sh ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)   
         sudo sh ./gradlew --stop    
       displayName: Build Test
-      condition: ne(variables['CacheRestored'], 'true')
 
 - stage: BuildandPublish
   displayName: Build and Publish
@@ -52,7 +51,6 @@ stages:
         sudo sh ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)   
         sudo sh ./gradlew --stop    
       displayName: Build
-      condition: ne(variables['CacheRestored'], 'true')
     - script: |
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-$(tag2)'
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
