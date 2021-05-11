@@ -3,3 +3,4 @@ variables:
 - group: group-camel-quarkus-gradle
 - group: group-macmiller
 - group: group-gittools
+- group: group-artifacts

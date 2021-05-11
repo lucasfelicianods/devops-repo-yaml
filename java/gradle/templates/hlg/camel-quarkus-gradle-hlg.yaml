@@ -14,18 +14,16 @@ stages:
         versionSpec: '5.6.8'
     - task: gitversion/execute@0
       displayName: Use GitVersion
-    - task: Gradle@2
-      displayName: Build Test
+    - task: RestoreAndSaveCache@1
       inputs:
-        workingDirectory: ''
-        gradleWrapperFile: 'gradlew'
-        gradleOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.11'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/TEST-*.xml' 
-        tasks: 'Test -PartifactId=$(projectId) -Pversion=$(tag1)'
+        keyfile: 'gradle | $(Agent.OS)'
+        targetfolder: '$(Pipeline.Workspace)/.gradle/caches/'
+        vstsFeed: '$(ArtifactFeedGradleCache)'
+        platformIndependent: true
+    - script: |
+        sudo sh ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)   
+        sudo sh ./gradlew --stop    
+      displayName: Build Test
 
 - stage: BuildandPublish
   displayName: Build and Publish
