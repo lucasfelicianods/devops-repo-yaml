@@ -17,7 +17,7 @@ stages:
     - task: RestoreAndSaveCache@1
       inputs:
         keyfile: 'gradlew | $(Agent.OS)'
-        targetfolder: '$(Pipeline.Workspace)/.gradle/caches/'
+        targetfolder: '$(Pipeline.Workspace)/.gradle'
         vstsFeed: '$(ArtifactFeedGradleCache)'
         platformIndependent: true
     - script: |
@@ -45,7 +45,7 @@ stages:
     - task: RestoreCache@1
       inputs:
         keyfile: 'gradlew | $(Agent.OS)'
-        targetfolder: '$(Pipeline.Workspace)/.gradle/caches/'
+        targetfolder: '$(Pipeline.Workspace)/.gradle'
         vstsFeed: '$(ArtifactFeedGradleCache)'
         platformIndependent: true
     - script: |
