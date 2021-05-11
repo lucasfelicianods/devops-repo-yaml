@@ -16,7 +16,7 @@ stages:
       displayName: Use GitVersion
     - task: RestoreAndSaveCache@1
       inputs:
-        keyfile: 'gradle | $(Agent.OS)'
+        keyfile: 'gradlew | $(Agent.OS)'
         targetfolder: '$(Pipeline.Workspace)/.gradle/caches/'
         vstsFeed: '$(ArtifactFeedGradleCache)'
         platformIndependent: true
@@ -24,6 +24,7 @@ stages:
         sudo sh ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)   
         sudo sh ./gradlew --stop    
       displayName: Build Test
+      condition: ne(variables['CacheRestored'], 'true')
 
 - stage: BuildandPublish
   displayName: Build and Publish
@@ -41,18 +42,17 @@ stages:
         versionSpec: '5.6.8'
     - task: gitversion/execute@0
       displayName: Use GitVersion
-    - task: Gradle@2
+    - task: RestoreCache@1
+        inputs:
+          keyfile: 'gradlew | $(Agent.OS)'
+          targetfolder: '$(Pipeline.Workspace)/.gradle/caches/'
+          vstsFeed: '$(ArtifactFeedGradleCache)'
+          platformIndependent: true
+    - script: |
+        sudo sh ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)   
+        sudo sh ./gradlew --stop    
       displayName: Build
-      inputs:
-        workingDirectory: ''
-        gradleWrapperFile: 'gradlew'
-        gradleOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.11'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/TEST-*.xml' 
-        tasks: 'build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)'
+      condition: ne(variables['CacheRestored'], 'true')
     - script: |
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-$(tag2)'
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
