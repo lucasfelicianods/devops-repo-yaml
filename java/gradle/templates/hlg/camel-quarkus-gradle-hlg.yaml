@@ -16,11 +16,11 @@ stages:
       displayName: Use GitVersion
     - task: Cache@2
       inputs:
-      key: gradle | $(Agent.OS)
-      path: $(Pipeline.Workspace)/.gradle
-      restoreKeys: |
-        gradle | $(Agent.OS)
-        $(Agent.OS)
+        key: gradle | $(Agent.OS)
+        path: $(Pipeline.Workspace)/.gradle
+        restoreKeys: |
+          gradle | $(Agent.OS)
+          $(Agent.OS)
   displayName: Gradle caching
     - script: |
         sudo sh ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)   
@@ -45,11 +45,11 @@ stages:
       displayName: Use GitVersion
     - task: Cache@2
       inputs:
-      key: gradle | $(Agent.OS)
-      path: $(Pipeline.Workspace)/.gradle
-      restoreKeys: |
-        gradle | $(Agent.OS)
-        $(Agent.OS)
+        key: gradle | $(Agent.OS)
+        path: $(Pipeline.Workspace)/.gradle
+        restoreKeys: |
+          gradle | $(Agent.OS)
+          $(Agent.OS)
     - script: |
         sudo sh ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)   
         sudo sh ./gradlew --stop    
