@@ -14,18 +14,22 @@ stages:
         versionSpec: '5.6.8'
     - task: gitversion/execute@0
       displayName: Use GitVersion
-    - task: Gradle@2
-      displayName: Build Test
+    - script: |
+        cd $(Pipeline.Workspace)
+        pwd
+        ls -lha
+        echo $USER
+        mv $(Pipeline.Workspace)/config/settings.xml $USER/.m2
+    - task: Cache@2
       inputs:
-        workingDirectory: ''
-        gradleWrapperFile: 'gradlew'
-        gradleOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.11'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/TEST-*.xml' 
-        tasks: '--build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)'
+        key: gradle | $(Agent.OS)
+        path: $(Pipeline.Workspace)/.gradle
+        restoreKeys: |
+          gradle | $(Agent.OS) | build.gradle
+          $(Agent.OS)
+      displayName: Gradle caching
+    - script: |
+        sudo sh ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1) 
 
 - stage: BuildandPublish
   displayName: Build and Publish
@@ -43,17 +47,20 @@ stages:
         versionSpec: '5.6.8'
     - task: gitversion/execute@0
       displayName: Use GitVersion
-    - task: Gradle@2
+
+    - task: Cache@2
       inputs:
-        workingDirectory: ''
-        gradleWrapperFile: 'gradlew'
-        gradleOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.11'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/TEST-*.xml' 
-        tasks: '--build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)'   
+        key: gradle | $(Agent.OS)
+        path: $(Pipeline.Workspace)/.gradle
+        restoreKeys: |
+          gradle | $(Agent.OS) | build.gradle
+          $(Agent.OS)
+      displayName: Gradle caching
+    - script: |
+        sudo sh ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)  
+        sudo sh ./gradlew --stop    
+      displayName: Build
+
     - script: |
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-$(tag2)'
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
