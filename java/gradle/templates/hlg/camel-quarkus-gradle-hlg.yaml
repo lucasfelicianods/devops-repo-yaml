@@ -19,6 +19,14 @@ stages:
         artifactsFeeds: 'java-gradle-caching'
         mavenServiceConnections: 'sc-gradle-cache'
       displayName: Maven Authenticate
+    - task: Cache@2
+      inputs:
+        key: gradle | $(Agent.OS)
+        path: $(Pipeline.Workspace)/gradle
+        restoreKeys: |
+          gradle | $(Agent.OS) | Gemfile.lock
+          $(Agent.OS)
+      displayName: Gradle caching
     - task: Gradle@2
       displayName: Build Test
       inputs:
@@ -58,7 +66,7 @@ stages:
         jdkArchitectureOption: 'x64'
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml' 
-        tasks: 'build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)'   
+        tasks: '--build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)'   
     - script: |
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-$(tag2)'
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
