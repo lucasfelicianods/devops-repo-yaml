@@ -1,0 +1,75 @@
+stages:
+
+- stage: UnitTest
+  displayName: Unit Test
+  jobs:
+  - job: UnitTest
+    displayName: Unit Test
+    pool:
+      vmImage: '$(vmImageAZ)'
+    steps:
+    - task: gitversion/setup@0
+      displayName: Install GitTools
+      inputs:
+        versionSpec: '5.6.8'
+    - task: gitversion/execute@0
+      displayName: Use GitVersion
+    - task: Gradle@2
+      displayName: Build Test
+      inputs:
+        workingDirectory: ''
+        gradleWrapperFile: 'gradlew'
+        gradleOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.11'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/TEST-*.xml' 
+        tasks: '--build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)'
+
+- stage: BuildandPublish
+  displayName: Build and Publish
+  dependsOn: UnitTest
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - job: BuildandPublish
+    displayName: Build and Publish
+    pool:
+      vmImage: '$(vmImageAZ)'
+    steps:
+    - task: gitversion/setup@0
+      displayName: Install GitTools
+      inputs:
+        versionSpec: '5.6.8'
+    - task: gitversion/execute@0
+      displayName: Use GitVersion
+    - task: Gradle@2
+      inputs:
+        workingDirectory: ''
+        gradleWrapperFile: 'gradlew'
+        gradleOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.11'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/TEST-*.xml' 
+        tasks: '--build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)'   
+    - script: |
+        sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-$(tag2)'
+        sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
+      displayName: Tagging
+    - task: Docker@2
+      displayName: Push ACR
+      inputs:
+        containerRegistry: '$(dockerRegistryServiceConnection)'
+        repository: '$(imageRepository)_hlg'
+        command: 'push'
+        tags: '$(tag1)-$(tag2)'
+    - task: Docker@2
+      displayName: Push ACR latest
+      inputs:
+        containerRegistry: '$(dockerRegistryServiceConnection)'
+        repository: '$(imageRepository)_hlg'
+        command: 'push'
+        tags: 'latest'
+        
