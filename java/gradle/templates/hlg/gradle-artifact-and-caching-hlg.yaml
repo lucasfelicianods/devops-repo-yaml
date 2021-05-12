@@ -23,11 +23,8 @@ stages:
           $(Agent.OS)
       displayName: Gradle caching
     - script: |
-        cd $(Pipeline.Workspace)/s
-        pwd
-        ls -lha
-        echo $USER
-        mv $(Pipeline.Workspace)/s/config/settings.xml $USER/.m2
+        mkdir /home/$USER/.m2
+        mv $(Pipeline.Workspace)/s/config/settings.xml /home/$USER/.m2
         sudo sh ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1) 
 
 - stage: BuildandPublish
