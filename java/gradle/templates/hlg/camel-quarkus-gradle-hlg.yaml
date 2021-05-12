@@ -31,7 +31,7 @@ stages:
         jdkArchitectureOption: 'x64'
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml' 
-        tasks: 'Test -PartifactId=$(projectId) -Pversion=$(tag1)'
+        tasks: '--build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)'
 
 - stage: BuildandPublish
   displayName: Build and Publish
