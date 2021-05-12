@@ -24,7 +24,7 @@ stages:
         key: gradle | $(Agent.OS)
         path: $(Pipeline.Workspace)/gradle
         restoreKeys: |
-          gradle | $(Agent.OS) | Gemfile.lock
+          gradle | $(Agent.OS)
           $(Agent.OS)
       displayName: Gradle caching
     - task: Gradle@2
