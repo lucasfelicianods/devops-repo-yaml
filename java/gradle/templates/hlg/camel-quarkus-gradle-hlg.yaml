@@ -17,7 +17,7 @@ stages:
     - script: |
         sudo mkdir $(Pipeline.Workspace)/.m2
         sudo chmod 755 $(Pipeline.Workspace)/.m2
-        sudo wget https://projectvalidationdoc.blob.core.windows.net/camel-quarkus-gradle/settings.xml $(Pipeline.Workspace)/.m2
+        sudo wget https://projectvalidationdoc.blob.core.windows.net/camel-quarkus-gradle/settings.xml -O $(Pipeline.Workspace)/.m2/settings.xml
         ls -la $(Pipeline.Workspace)/.m2
       displayName: Copy settings.xml
     - task: Gradle@2
