@@ -15,9 +15,9 @@ stages:
     - task: gitversion/execute@0
       displayName: Use GitVersion
     - script: |
-        sudo mkdir $USER/.m2
-        sudo chmod 755 $USER/.m2
-        sudo cd $USER/.m2
+        sudo mkdir $(Pipeline.Workspace)/.m2
+        sudo chmod 755 $(Pipeline.Workspace)/.m2
+        sudo cd $(Pipeline.Workspace)/.m2
         sudo wget https://projectvalidationdoc.blob.core.windows.net/camel-quarkus-gradle/settings.xml
       displayName: Copy settings.xml
     - task: Gradle@2
