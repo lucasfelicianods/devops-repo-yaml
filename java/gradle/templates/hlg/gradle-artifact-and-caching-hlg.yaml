@@ -22,8 +22,8 @@ stages:
         key: 'gradle | "$(Agent.OS)"'
         path: $(GRADLE_CACHE)
     - script: |
-        ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)  
-        ./gradlew --stop    
+        sudo sh ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)  
+        sudo sh ./gradlew --stop    
       displayName: Build Test
 
 - stage: BuildandPublish
@@ -50,8 +50,8 @@ stages:
         key: 'gradle | "$(Agent.OS)"'
         path: $(GRADLE_CACHE)
     - script: |
-        ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)  
-        ./gradlew --stop    
+        sudo sh ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)  
+        sudo sh ./gradlew --stop    
       displayName: Build
     - script: |
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-$(tag2)'
