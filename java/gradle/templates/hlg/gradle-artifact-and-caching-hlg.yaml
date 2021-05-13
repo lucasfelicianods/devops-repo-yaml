@@ -8,9 +8,6 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - bash: |
-        echo "##vso[task.setvariable variable=HOME_DIRECTORY;]$HOME"
-      displayName: Set Variable
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
@@ -37,9 +34,6 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - bash: |
-        echo "##vso[task.setvariable variable=HOME_DIRECTORY;]$HOME"
-      displayName: Set Variable
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
