@@ -73,7 +73,7 @@ stages:
       displayName: Cache Docker images
     - script: |
         mkdir -p /home/vsts/.docker
-        docker save -o home/vsts/.docker/cache.tar cache
+        docker save -o /home/vsts/.docker/cache.tar cache
       displayName: Save Docker image
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
     - script: |
