@@ -4,3 +4,5 @@ variables:
 - group: group-gittools
 - group: group-gradle-artifact-and-caching
 - group: group-gradle
+- group: group-general
+- group: group-artifacts
