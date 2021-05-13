@@ -14,18 +14,17 @@ stages:
         versionSpec: '5.6.8'
     - task: gitversion/execute@0
       displayName: Use GitVersion
-    - task: Gradle@2
-      displayName: Build Test
+    - bash: |
+        echo "##vso[task.setvariable variable=HOME_DIRECTORY;]$HOME"
+    - task: Cache@2
+      displayName: Gradle Caches
       inputs:
-        workingDirectory: ''
-        gradleWrapperFile: 'gradlew'
-        gradleOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.11'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/TEST-*.xml' 
-        tasks: 'test -PartifactId=$(projectId) -Pversion=$(tag1)'
+        key: 'gradle | "$(Agent.OS)"'
+        path: $(GRADLE_CACHE)
+    - script: |
+        ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)  
+        ./gradlew --stop    
+      displayName: Build Test
 
 - stage: BuildandPublish
   displayName: Build and Publish
@@ -43,17 +42,17 @@ stages:
         versionSpec: '5.6.8'
     - task: gitversion/execute@0
       displayName: Use GitVersion
-    - task: Gradle@2
+    - bash: |
+        echo "##vso[task.setvariable variable=HOME_DIRECTORY;]$HOME"
+    - task: Cache@2
+      displayName: Gradle Caches
       inputs:
-        workingDirectory: ''
-        gradleWrapperFile: 'gradlew'
-        gradleOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.11'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/TEST-*.xml' 
-        tasks: 'build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)'   
+        key: 'gradle | "$(Agent.OS)"'
+        path: $(GRADLE_CACHE)
+    - script: |
+        ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)  
+        ./gradlew --stop    
+      displayName: Build
     - script: |
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-$(tag2)'
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
