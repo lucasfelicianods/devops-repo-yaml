@@ -8,6 +8,9 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
+    - bash: |
+        echo "##vso[task.setvariable variable=HOME_DIRECTORY;]$HOME"
+      displayName: Set Variable
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
@@ -15,17 +18,14 @@ stages:
     - task: gitversion/execute@0
       displayName: Use GitVersion
     - task: Cache@2
+      displayName: Gradle Caches
       inputs:
-        key: gradle | $(Agent.OS)
-        path: $(Pipeline.Workspace)/.gradle
-        restoreKeys: |
-          gradle | $(Agent.OS) | build.gradle
-          $(Agent.OS)
-      displayName: Gradle caching
+        key: 'gradle | "$(Agent.OS)"'
+        path: $(GRADLE_CACHE) 
     - script: |
-        mkdir /home/$USER/.m2
-        mv $(Pipeline.Workspace)/s/config/settings.xml /home/$USER/.m2
-        sudo sh ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1) 
+        ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)    
+        ./gradlew --stop    
+      displayName: Build Test
 
 - stage: BuildandPublish
   displayName: Build and Publish
@@ -37,26 +37,24 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
+    - bash: |
+        echo "##vso[task.setvariable variable=HOME_DIRECTORY;]$HOME"
+      displayName: Set Variable
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
         versionSpec: '5.6.8'
     - task: gitversion/execute@0
       displayName: Use GitVersion
-
     - task: Cache@2
+      displayName: Gradle Caches
       inputs:
-        key: gradle | $(Agent.OS)
-        path: $(Pipeline.Workspace)/.gradle
-        restoreKeys: |
-          gradle | $(Agent.OS) | build.gradle
-          $(Agent.OS)
-      displayName: Gradle caching
+        key: 'gradle | "$(Agent.OS)"'
+        path: $(GRADLE_CACHE) 
     - script: |
-        sudo sh ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)  
-        sudo sh ./gradlew --stop    
-      displayName: Build
-
+        ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)    
+        ./gradlew --stop    
+      displayName: Build  
     - script: |
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-$(tag2)'
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
