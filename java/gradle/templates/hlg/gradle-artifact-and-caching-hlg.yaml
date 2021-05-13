@@ -56,7 +56,7 @@ stages:
         ./gradlew --stop    
       displayName: Build
     - script: |
-        ./gradlew --build-cache -PartifactId=$(projectId) -Pversion=$(tag1) -PurlArtifactsMaven=${urlArtifactsMaven} -PfeedArtifactsMaven=${feedArtifactsMaven} -PuserPublish=${organizationName} -PuserPublish=${accessTokenMaven}  publish
+        ./gradlew --build-cache -PartifactId=$(projectId) -Pversion=$(tag1) -PurlArtifactsMaven=${urlArtifactsMaven} -PfeedArtifactsMaven=${feedArtifactsMaven} -PuserPublish=${organizationName} -PkeyPublish=${accessTokenMaven} publish
       displayName: Artifacts
     - script: |
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-$(tag2)'
