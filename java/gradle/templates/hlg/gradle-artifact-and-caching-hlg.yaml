@@ -20,7 +20,7 @@ stages:
       displayName: Gradle Caches
       inputs:
         key: 'gradle | "$(Agent.OS)"'
-        path: $(GRADLE_CACHE)
+        path: $(GradleCache)
     - script: |
         sudo sh ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)  
         sudo sh ./gradlew --stop    
@@ -48,7 +48,7 @@ stages:
       displayName: Gradle Caches
       inputs:
         key: 'gradle | "$(Agent.OS)"'
-        path: $(GRADLE_CACHE)
+        path: $(GradleCache)
     - script: |
         sudo sh ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository)  
         sudo sh ./gradlew --stop    
