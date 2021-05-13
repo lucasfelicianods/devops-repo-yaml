@@ -73,7 +73,8 @@ stages:
       displayName: Cache Docker images
     - script: |
         mkdir -p /home/vsts/.docker
-        docker save -o /home/vsts/.docker/cache.tar cache
+        docker image ls
+        docker save -o /home/vsts/.docker/cache.tar fabric8/java-alpine-openjdk11-jre
       displayName: Save Docker image
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
     - script: |
