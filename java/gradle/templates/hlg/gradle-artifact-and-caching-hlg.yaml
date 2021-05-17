@@ -80,7 +80,7 @@ stages:
         ./gradlew --build-cache -PartifactId=$(projectId) -Pversion=$(tag1) -PurlArtifactsMaven=$(urlArtifactsMaven) -PfeedArtifactsMaven=$(feedArtifactsMaven) -PuserPublish=$(organizationName) -PkeyPublish=$(accessTokenMaven) -Dquarkus.package.type=native publish
       displayName: Artifacts
     - script: |
-        sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-$(tag2)'
+        sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-hlg'
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
       displayName: Tagging
     - task: Docker@2
@@ -89,7 +89,7 @@ stages:
         containerRegistry: '$(dockerRegistryServiceConnection)'
         repository: '$(imageRepository)_hlg'
         command: 'push'
-        tags: '$(tag1)-$(tag2)'
+        tags: '$(tag1)-hlg'
     - task: Docker@2
       displayName: Push ACR latest
       inputs:
