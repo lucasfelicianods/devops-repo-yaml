@@ -1,7 +1,7 @@
 stages:
 - stage: TagAndPush
   displayName: Tag And Push
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/hotfix/'))
   jobs:
   - job: TagAndPush
     displayName: Tag And Push
