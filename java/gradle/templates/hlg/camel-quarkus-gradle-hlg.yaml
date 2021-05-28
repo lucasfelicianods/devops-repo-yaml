@@ -1,5 +1,5 @@
 stages:
-- checkout: selfdevops-repo-yaml
+- checkout: devops-repo-yaml
 - stage: UnitTest
   displayName: Unit Test
   jobs:
