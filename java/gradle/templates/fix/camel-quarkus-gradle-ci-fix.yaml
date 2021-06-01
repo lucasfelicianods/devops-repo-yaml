@@ -15,7 +15,7 @@ stages:
     - task: gitversion/execute@0
       displayName: Use GitVersion  
     - script: |
-        sudo az login -u '$(azLoginMacmiller)' -p '$(azSenhaMacmiller)' -t '$(tenantId)'
+        sudo az login -u '$(azLoginACR)' -p '$(azSenhaACR)' -t '$(tenantId)'
         sudo az acr login --name '$(containerRegistryAbreviado)'
         sudo docker pull '$(containerRegistry)/$(imageRepository)_hlg:latest'
         sudo docker tag '$(containerRegistry)/$(imageRepository)_hlg:latest' '$(containerRegistry)/$(imageRepository)_prd:$(tag1)'
