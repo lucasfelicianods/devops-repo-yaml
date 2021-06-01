@@ -17,16 +17,16 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          helm lint chart
+          helm lint java/gradle/templates/camel-quarkus-gradle/helm/chart
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(system.defaultworkingdirectory)'
         Contents: |
-          chart/**
+          java/gradle/templates/camel-quarkus-gradle/helm/chart/**
         TargetFolder: '$(Build.ArtifactStagingDirectory)/'
         OverWrite: true
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/chart'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/java/gradle/templates/camel-quarkus-gradle/helm/chart'
         ArtifactName: 'helm'
         publishLocation: 'Container'
