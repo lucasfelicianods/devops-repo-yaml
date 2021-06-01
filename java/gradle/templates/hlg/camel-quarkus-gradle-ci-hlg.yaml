@@ -47,7 +47,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          helm lint chart
+          helm lint chart/$(projectId)
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(system.defaultworkingdirectory)'
