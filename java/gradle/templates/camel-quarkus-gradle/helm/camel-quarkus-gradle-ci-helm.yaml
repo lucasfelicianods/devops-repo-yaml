@@ -10,9 +10,9 @@ stages:
     - checkout: devops-repo-yaml
     - script: dir $(Build.SourcesDirectory)
     - task: HelmInstaller@1
-      displayName: Install Helm Latest
+      displayName: Install Helm 3.5.4
       inputs:
-        helmVersionToInstall: 'latest'
+        helmVersionToInstall: '3.5.4'
     - task: Bash@3
       displayName: Helm lint
       inputs:
