@@ -7,6 +7,7 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
+    - checkout: devops-repo-yaml
     - script: dir $(Build.SourcesDirectory)
     - task: HelmInstaller@1
       displayName: Install Helm Latest
