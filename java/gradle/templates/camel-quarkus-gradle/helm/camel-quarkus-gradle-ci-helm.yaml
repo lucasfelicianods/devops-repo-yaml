@@ -1,0 +1,32 @@
+stages:
+- stage: CheckOutHelmRepo
+  displayName: Check Out Helm Repo
+  jobs:
+  - job: helm
+    displayName: helm
+    pool:
+      vmImage: '$(vmImageAZ)'
+    steps:
+    - script: dir $(Build.SourcesDirectory)
+    - task: HelmInstaller@1
+      displayName: Install Helm Latest
+      inputs:
+        helmVersionToInstall: 'latest'
+    - task: Bash@3
+      displayName: Helm lint
+      inputs:
+        targetType: 'inline'
+        script: |
+          helm lint chart
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(system.defaultworkingdirectory)'
+        Contents: |
+          chart/**
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/'
+        OverWrite: true
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/chart'
+        ArtifactName: 'helm'
+        publishLocation: 'Container'
