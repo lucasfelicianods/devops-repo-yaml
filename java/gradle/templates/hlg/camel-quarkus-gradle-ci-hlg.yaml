@@ -27,42 +27,6 @@ stages:
         ./gradlew --stop    
       displayName: Build Test
 
-- stage: CheckOutHelmRepo
-  displayName: Check Out Helm Repo
-  dependsOn: UnitTest
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-  jobs:
-  - job: helm
-    displayName: helm
-    pool:
-      vmImage: '$(vmImageAZ)'
-    steps:
-    - script: dir $(Build.SourcesDirectory)
-    - task: HelmInstaller@1
-      displayName: Install Helm Latest
-      inputs:
-        helmVersionToInstall: 'latest'
-    - task: Bash@3
-      displayName: Helm lint
-      inputs:
-        targetType: 'inline'
-        script: |
-          helm lint chart/$(projectId)
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)'
-        Contents: |
-          chart/**
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/'
-        OverWrite: true
-      displayName: Copy Files Helm
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/chart'
-        ArtifactName: 'helm'
-        publishLocation: 'Container'
-      displayName: Publish and Build Artifacts Helm
-
 - stage: BuildandPublish
   displayName: Build and Publish
   dependsOn: UnitTest
