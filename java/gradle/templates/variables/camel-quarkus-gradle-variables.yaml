@@ -1,5 +1,0 @@
-variables:
-- group: group-acr
-- group: group-camel-quarkus-gradle
-- group: group-macmiller
-- group: group-gittools
