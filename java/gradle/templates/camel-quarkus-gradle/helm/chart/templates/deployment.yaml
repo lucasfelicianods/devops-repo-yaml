@@ -43,13 +43,13 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: http
+              port: 8080
             timeoutSeconds: 3
             initialDelaySeconds: 10
           readinessProbe:
             httpGet:
               path: /health
-              port: http
+              port: 8080
             timeoutSeconds: 3
             initialDelaySeconds: 7
           env:
