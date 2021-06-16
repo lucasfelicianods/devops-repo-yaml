@@ -2,7 +2,7 @@ variables:
 - group: group-acr
 - group: group-macmiller
 - group: group-gittools
-- group: group-gradle-artifact-and-caching
+- group: group-poc-playbooks
 - group: group-gradle
 - group: group-general
 - group: group-artifacts
