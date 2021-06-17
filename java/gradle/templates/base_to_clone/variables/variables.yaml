@@ -1,0 +1,8 @@
+variables:
+- group: group-acr
+- group: group-macmiller
+- group: group-gittools
+- group: group-base_to_clone
+- group: group-gradle
+- group: group-general
+- group: group-artifacts
