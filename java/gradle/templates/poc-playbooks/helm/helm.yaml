@@ -10,7 +10,6 @@ stages:
       vmImage: '$(vmImageAZ)'
     steps:
     - checkout: devops-repo-yaml
-    - script: dir $(Build.SourcesDirectory)
     - task: HelmInstaller@1
       displayName: Install Helm 3.5.4
       inputs:
