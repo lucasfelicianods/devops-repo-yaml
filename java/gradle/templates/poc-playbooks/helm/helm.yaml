@@ -28,10 +28,10 @@ stages:
           java/gradle/templates/$(projectId)/helm/chart/**
         TargetFolder: '$(Build.ArtifactStagingDirectory)/'
         OverWrite: true
-      displayname: Copy Files
+      displayName: Copy Files
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm/chart'
         ArtifactName: 'helm'
         publishLocation: 'Container'
-      displayname: Publish and Build Artifacts
+      displayName: Publish and Build Artifacts
