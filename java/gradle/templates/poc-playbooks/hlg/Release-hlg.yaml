@@ -32,7 +32,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          helm lint java/gradle/templates/$(projectId)/helm
+          helm lint $(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm
         failOnStderr: true
     - script: |
         helm upgrade --namespace $(projectId)-hlg --install --set image.repository=lightregistry.azurecr.io/$(projectId)_hlg:latest --wait --timeout 600s --history-max 5 $(projectId)-hlg $(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm
