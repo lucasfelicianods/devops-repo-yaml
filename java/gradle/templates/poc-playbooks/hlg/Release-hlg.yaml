@@ -24,9 +24,4 @@ stages:
         artifactName: 'helm'
         downloadPath: '$(Build.ArtifactStagingDirectory)'
     - script: |
-        helm upgrade --namespace $(projectId)-hlg --install --set image.repository=lightregistry.azurecr.io/$(projectId)_hlg:latest --wait --timeout 600s --history-max 5 $(projectId)-hlg $(Build.ArtifactStagingDirectory)/helm
-    - task: oc-cmd@2
-      inputs:
-        connectionType: 'OpenShift Connection Service'
-        openshiftService: 'sc-sa-az-devops'
-        cmd: oc project
+        helm upgrade --namespace $(projectId)-hlg --install --set image.repository=lightregistry.azurecr.io/$(projectId)_hlg --wait --timeout 600s --history-max 5 $(projectId)-hlg $(Build.ArtifactStagingDirectory)/helm
