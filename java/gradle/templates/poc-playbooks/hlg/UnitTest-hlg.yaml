@@ -23,5 +23,6 @@ stages:
         path: $(GradleCache)
     - script: |
         ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)  
-        ./gradlew --stop    
+        ./gradlew --stop
+      failOnStderr: true    
       displayName: Build Test
