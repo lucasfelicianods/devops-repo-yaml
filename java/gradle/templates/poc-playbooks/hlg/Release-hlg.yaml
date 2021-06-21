@@ -26,13 +26,5 @@ stages:
       displayName: Install Helm 3.5.4
       inputs:
         helmVersionToInstall: '3.5.4'
-    - task: HelmDeploy@0
-      inputs:
-        connectionType: 'None'
-        namespace: '$(ocProject)'
-        command: 'upgrade'
-        chartType: 'FilePath'
-        chartPath: '_$(projectId)-hlg'
-        releaseName: '$(serviceName)'
-        overrideValues: '$(helmValues)'
-        arguments: '--timeout 600s --history-max 5'
+    - script: |
+        helm upgrade --namespace poc-playbooks-hlg --install --set image.repository=lightregistry.azurecr.io/poc-playbooks_hlg --wait --timeout 600s --history-max 5 poc-playbooks-hlg /home/vsts/work/r1/a/_poc-playbooks-hlg/helm
