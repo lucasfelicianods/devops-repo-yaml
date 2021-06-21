@@ -22,6 +22,10 @@ stages:
         connectionType: 'OpenShift Connection Service'
         openshiftService: 'sc-sa-az-devops'
         cmd: oc project
+    - task: HelmInstaller@1
+      displayName: Install Helm 3.5.4
+      inputs:
+        helmVersionToInstall: '3.5.4'
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
