@@ -18,7 +18,7 @@ stages:
       inputs:
         buildType: 'specific'
         project: '$(projectId)'
-        pipeline: '$(projectId)-hlg'
+        pipeline: '_$(projectId)-hlg'
         buildVersionToDownload: '0.3.2-hlg.1+2'
         downloadType: 'single'
         artifactName: 'helm'
