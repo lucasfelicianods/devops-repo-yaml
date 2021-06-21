@@ -17,6 +17,10 @@ stages:
         buildVersionToDownload: 'latest'
         downloadType: 'specific'
         downloadPath: '$(System.DefaultWorkingDirectory)/_$(projectId)-hlg'
+    - task: oc-cmd@2
+      inputs:
+        connectionType: 'OpenShift Connection Service'
+        openshiftService: 'sc-sa-az-devops'
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
