@@ -9,7 +9,6 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - checkout: devops-repo-yaml
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'specific'
@@ -17,14 +16,14 @@ stages:
         pipeline: '$(projectId)-hlg'
         buildVersionToDownload: 'latest'
         downloadType: 'specific'
-        downloadPath: '$(System.DefaultWorkingDirectory)'
+        downloadPath: '$(System.DefaultWorkingDirectory)/_$(projectId)-hlg'
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
         namespace: '$(ocProject)'
-        command: 'install'
+        command: 'upgrade'
         chartType: 'FilePath'
-        chartPath: '$(chartPath)'
-        chartVersion: '3.5.4'
+        chartPath: '_$(projectId)-hlg'
         releaseName: '$(serviceName)'
         overrideValues: '$(helmValues)'
+        arguments: '--timeout 600s --history-max 5'
