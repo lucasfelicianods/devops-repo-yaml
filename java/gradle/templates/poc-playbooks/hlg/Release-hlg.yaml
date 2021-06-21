@@ -1,0 +1,8 @@
+stages:
+- stage: Release
+  displayName: Release
+  #dependsOn: BuildandPublish
+  jobs:
+  - deployment:
+    displayName:
+    environment:
