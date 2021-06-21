@@ -19,19 +19,19 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          helm lint java/gradle/templates/$(projectId)/helm/chart
+          helm lint java/gradle/templates/$(projectId)/helm
         failOnStderr: true
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(system.defaultworkingdirectory)'
         Contents: |
-          java/gradle/templates/$(projectId)/helm/chart/**
+          java/gradle/templates/$(projectId)/helm/**
         TargetFolder: '$(Build.ArtifactStagingDirectory)/'
         OverWrite: true
       displayName: Copy Files
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm/chart'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm'
         ArtifactName: 'helm'
         publishLocation: 'Container'
       displayName: Publish and Build Artifacts
