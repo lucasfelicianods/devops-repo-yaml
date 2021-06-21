@@ -1,8 +1,29 @@
 stages:
 - stage: Release
   displayName: Release
-  #dependsOn: BuildandPublish
+  #dependsOn: CheckOutHelmRepo
+  #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:
-  - deployment:
-    displayName:
-    environment:
+  - job: Release
+    displayName: Release
+    pool:
+      vmImage: '$(vmImageAZ)'
+    steps:
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'specific'
+        project: '$(system.teamProject)'
+        pipeline: '$(projectId)-hlg'
+        buildVersionToDownload: 'latest'
+        downloadType: 'specific'
+        downloadPath: '$(System.DefaultWorkingDirectory)'
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'None'
+        namespace: '$(ocProject)'
+        command: 'install'
+        chartType: 'FilePath'
+        chartPath: '$(chartPath)'
+        chartVersion: '3.5.4'
+        releaseName: '$(serviceName)'
+        overrideValues: '$(helmValues)'
