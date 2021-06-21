@@ -9,6 +9,11 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
+    - task: oc-cmd@2
+      inputs:
+        connectionType: 'OpenShift Connection Service'
+        openshiftService: 'sc-sa-az-devops'
+        cmd: oc project
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'specific'
