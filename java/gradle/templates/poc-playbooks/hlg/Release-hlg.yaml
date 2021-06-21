@@ -4,6 +4,9 @@ stages:
   #dependsOn: CheckOutHelmRepo
   #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:
+  - deployment: Deployment
+    displayName: Deployment
+    environment: poc-playbooks
   - job: Release
     displayName: Release
     pool:
