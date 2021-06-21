@@ -20,6 +20,7 @@ stages:
         targetType: 'inline'
         script: |
           helm lint java/gradle/templates/$(projectId)/helm/chart
+        failOnStderr: true
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(system.defaultworkingdirectory)'

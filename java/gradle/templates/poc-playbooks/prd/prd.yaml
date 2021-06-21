@@ -20,6 +20,7 @@ stages:
         sudo docker pull '$(containerRegistry)/$(imageRepository)_hlg:latest'
         sudo docker tag '$(containerRegistry)/$(imageRepository)_hlg:latest' '$(containerRegistry)/$(imageRepository)_prd:$(tag1)'
         sudo docker tag '$(containerRegistry)/$(imageRepository)_hlg:latest' '$(containerRegistry)/$(imageRepository)_prd:latest'
+      failOnStderr: true
       displayName: Tagging
 
     - task: Docker@2
