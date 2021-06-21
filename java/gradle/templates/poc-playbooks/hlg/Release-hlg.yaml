@@ -21,6 +21,7 @@ stages:
       inputs:
         connectionType: 'OpenShift Connection Service'
         openshiftService: 'sc-sa-az-devops'
+        cmd: oc project
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
