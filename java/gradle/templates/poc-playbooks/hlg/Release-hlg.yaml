@@ -28,4 +28,4 @@ stages:
       inputs:
         helmVersionToInstall: '3.5.4'
     - script: |
-        helm upgrade --namespace $(projectId)-hlg --install --set image.repository=lightregistry.azurecr.io/$(projectId)_hlg:latest --wait --timeout 600s --history-max 5 $(projectId)-hlg $(System.DefaultWorkingDirectory)/_$(projectId)-hlg/helm
+        helm upgrade --namespace $(projectId)-hlg --install --set image.repository=lightregistry.azurecr.io/$(projectId)_hlg:latest --wait --timeout 600s --history-max 5 $(projectId)-hlg $(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm
