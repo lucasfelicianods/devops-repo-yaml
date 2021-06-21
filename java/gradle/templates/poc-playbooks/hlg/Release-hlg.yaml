@@ -18,8 +18,8 @@ stages:
       inputs:
         buildType: 'specific'
         project: '$(projectId)'
-        pipeline: '_$(projectId)-hlg'
-        buildVersionToDownload: '0.3.2-hlg.1+2'
+        pipeline: '$(projectId)-hlg'
+        buildVersionToDownload: 'latest'
         downloadType: 'single'
         artifactName: 'helm'
         downloadPath: '$(Build.ArtifactStagingDirectory)'
