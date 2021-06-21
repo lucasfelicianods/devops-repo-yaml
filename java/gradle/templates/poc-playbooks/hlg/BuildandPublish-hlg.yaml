@@ -47,14 +47,17 @@ stages:
     - script: |
         mkdir -p /home/vsts/.docker
         docker save -o /home/vsts/.docker/cache.tar $(dockerBaseImage)
+      failOnStderr: true
       displayName: Save Docker image
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
     - script: |
         ./gradlew --build-cache -PartifactId=$(projectId) -Pversion=$(tag1) -PurlArtifactsMaven=$(urlArtifactsMaven) -PfeedArtifactsMaven=$(feedArtifactsMaven) -PuserPublish=$(organizationName) -PkeyPublish=$(accessTokenMaven) -Dquarkus.package.type=native publish
+      failOnStderr: true
       displayName: Artifacts
     - script: |
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-hlg'
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
+      failOnStderr: true
       displayName: Tagging
     - task: Docker@2
       displayName: Push ACR
