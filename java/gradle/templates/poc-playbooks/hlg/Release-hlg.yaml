@@ -12,7 +12,6 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - checkout: devops-repo-yaml
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
@@ -23,6 +22,8 @@ stages:
       displayName: OpenShift Connect
       inputs:
         openshiftService: 'sc-sa-az-devops'
+    steps:
+    - checkout: devops-repo-yaml
     - task: Bash@3
       displayName: Helm Check lint
       inputs:
@@ -33,12 +34,12 @@ stages:
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
-        namespace: '$(projectId)$(PreReleaseLabelWithDash)'
+        namespace: '$(projectId)-hlg'
         command: 'upgrade'
         chartType: 'FilePath'
         chartPath: 'java/gradle/templates/$(projectId)/helm'
-        releaseName: '$(projectId)$(PreReleaseLabelWithDash)'
-        overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=$(GitVersion.MajorMinorPatch)$(PreReleaseLabelWithDash)'
+        releaseName: '$(projectId)-hlg'
+        overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=$(GitVersion.MajorMinorPatch)-hlg'
         arguments: '--timeout 300s --history-max 10'
       displayName: Helm Deploy
   - job: ThreeScale
@@ -59,7 +60,7 @@ stages:
         openshiftService: 'sc-sa-az-devops'
     - script: |
         git clone https://$(gitUsername):$(gitPassword)@github.com/ArquiteturaCorporativaLight/$(projectId).git
-      displayName: Git checkout Repo
+      displayName: Git Clone Repo
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
@@ -73,11 +74,11 @@ stages:
         sed -i "s|\${OPEN_API_DIR}|$(openApiDir)|g" $_
         sed -i "s|\${OIDC_ISSUER}|$(oidcIssuer)|g" $_
         sed -i "s|\${ISSUER_TYPE}|$(issuerType)|g"  $_
-        sed -i "s|\${SERVICE_NAME}|$(projectId)$(PreReleaseLabelWithDash)|g" $_
+        sed -i "s|\${SERVICE_NAME}|$(projectId)-hlg|g" $_
         # Task Create Application Plan
         sed -i "s|\${PLAN_NAME}|$(planName)|g"  $(projectId)/toolbox/$(jobCreateApplicationPlan)
         sed -i "s|\${3SCALE_REMOTE_INSTANCE}|$(3scaleRemoteInstance)|g" $_
-        sed -i "s|\${SERVICE_NAME}|$(projectId)$(PreReleaseLabelWithDash)|g" $_
+        sed -i "s|\${SERVICE_NAME}|$(projectId)-hlg|g" $_
         sed -i "s|\${PLAN_DESCRIPTION}|$(planDescription)|g" $_
         # Task Create Application
         sed -i "s|\${APPLICATION_NAME}|$(applicationName)|g"  $(projectId)/toolbox/$(jobCreateApplication)
@@ -85,11 +86,11 @@ stages:
         sed -i "s|\${USER_ACCOUNT}|$(userAccount)|g" $_
         sed -i "s|\${DESCRIPTION_NAME}|$(descriptionName)|g" $_
         sed -i "s|\${DESCRIPTION}|$(description)|g" $_
-        sed -i "s|\${SERVICE_NAME}|$(projectId)$(PreReleaseLabelWithDash)|g" $_
+        sed -i "s|\${SERVICE_NAME}|$(projectId)-hlg|g" $_
         sed -i "s|\${PLAN_NAME}|$(planName)|g"  $_
         # Task Promote API
         sed -i "s|\${3SCALE_REMOTE_INSTANCE}|$(3scaleRemoteInstance)|g"  $(projectId)/toolbox/$(jobPromoteApi)
-        sed -i "s|\${SERVICE_NAME}|$(projectId)$(PreReleaseLabelWithDash)|g" $_
+        sed -i "s|\${SERVICE_NAME}|$(projectId)-hlg|g" $_
       failOnStderr: true
       displayName: Change YAML Variable
     - script: |
