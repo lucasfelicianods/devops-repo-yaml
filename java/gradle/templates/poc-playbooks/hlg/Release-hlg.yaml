@@ -35,6 +35,6 @@ stages:
         chartPath: '$(Build.ArtifactStagingDirectory)/helm'
         releaseName: '$(projectId)-hlg'
         overrideValues: 'image.repository=lightregistry.azurecr.io/$(projectId)_hlg'
-        valueFile: 'values.yaml'
-        recreate: true
+        #valueFile: 'values.yaml'
+        #recreate: true
         force: true
