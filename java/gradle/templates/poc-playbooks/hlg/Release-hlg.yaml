@@ -29,7 +29,7 @@ stages:
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
-        namespace: '$(projectId)'
+        namespace: '$(projectId)-hlg'
         command: 'upgrade'
         chartType: 'FilePath'
         chartPath: '$(Build.ArtifactStagingDirectory)/helm'
