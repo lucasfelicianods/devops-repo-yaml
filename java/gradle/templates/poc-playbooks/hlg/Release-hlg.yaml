@@ -37,5 +37,4 @@ stages:
         chartPath: '$(Build.ArtifactStagingDirectory)/helm'
         releaseName: '$(projectId)-hlg'
         overrideValues: 'image.repository=lightregistry.azurecr.io/$(projectId)_hlg,image.tag=0.3.1-hlg'
-        force: true
       displayName: Helm Deploy
