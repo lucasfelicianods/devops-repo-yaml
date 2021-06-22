@@ -22,7 +22,6 @@ stages:
       displayName: OpenShift Connect
       inputs:
         openshiftService: 'sc-sa-az-devops'
-    steps:
     - checkout: devops-repo-yaml
     - task: Bash@3
       displayName: Helm Check lint
