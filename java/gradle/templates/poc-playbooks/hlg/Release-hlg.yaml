@@ -1,12 +1,14 @@
 stages:
-- stage: Release
-  displayName: Release
+- stage: DeployHomolog
+  displayName: Deploy Homolog
   #dependsOn: CheckOutHelmRepo
   #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:
-  - job: DeployHomolog
-    displayName: Deploy Homolog
+  - deployment: Approval
+    displayName: Approval
     environment: poc-playbooks
+  - job: Deployment
+    displayName: Deployment
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
