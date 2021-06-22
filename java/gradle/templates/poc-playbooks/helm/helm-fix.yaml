@@ -1,6 +1,6 @@
 stages:
 - stage: CheckOutHelmRepo
-  displayName: Helm package
+  displayName: Helm Check
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/hotfix/'))
   jobs:
   - job: helm
