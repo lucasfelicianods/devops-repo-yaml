@@ -12,6 +12,7 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
+    - checkout: devops-repo-yaml
     - task: redhat.openshift-vsts.oc-setup-task.oc-setup@2
       displayName: OpenShift Connect
       inputs:
