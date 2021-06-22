@@ -36,7 +36,7 @@ stages:
         releaseName: '$(projectId)-hlg'
         overrideValues: 'image.repository=lightregistry.azurecr.io/$(projectId)_hlg,image.tag=0.3.1-hlg'
       displayName: Helm Deploy
-  - job: 3Scale
+  - job: ThreeScale
     displayName: 3Scale
     dependsOn: DeploytoOpenShift
     pool:
