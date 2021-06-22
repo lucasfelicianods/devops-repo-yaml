@@ -7,17 +7,15 @@ stages:
   - deployment: Approval
     displayName: Approval
     environment: poc-playbooks
-  - job: Deployment
-    displayName: Deployment
+  - job: DeploytoOpenShift
+    displayName: Deploy to OpenShift
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - task: oc-cmd@2
-      inputs:
-        connectionType: 'OpenShift Connection Service'
-        openshiftService: 'sc-sa-az-devops'
-        cmd: oc project
+    - task: redhat.openshift-vsts.oc-setup-task.oc-setup@2
       displayName: OpenShift Connect
+      inputs:
+        openshiftService: 'sc-sa-az-devops'
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'specific'
@@ -38,3 +36,83 @@ stages:
         releaseName: '$(projectId)-hlg'
         overrideValues: 'image.repository=lightregistry.azurecr.io/$(projectId)_hlg,image.tag=0.3.1-hlg'
       displayName: Helm Deploy
+  - job: 3Scale
+    displayName: 3Scale
+    dependsOn: DeploytoOpenShift
+    pool:
+      vmImage: '$(vmImageAZ)'
+    steps:
+    - task: redhat.openshift-vsts.oc-setup-task.oc-setup@2
+      displayName: OpenShift Connect
+      inputs:
+        openshiftService: 'sc-sa-az-devops'
+    - script: |
+        git clone https://$(gitUsername):$(gitPassword)@github.com/ArquiteturaCorporativaLight/$(projectId).git
+      displayName: Git checkout Repo
+    - script: |
+
+        #JobImportAPI
+        sed -i "s|\${3SCALE_REMOTE_INSTANCE}|$(3scaleRemoteInstance)|g"   $(projectId)/toolbox/$(jobImportApi)
+        sed -i "s|\${OPEN_API_DIR}|$(openApiDir)|g" $_
+        sed -i "s|\${OIDC_ISSUER}|$(oidcIssuer)|g" $_
+        sed -i "s|\${ISSUER_TYPE}|$(issuerType)|g"  $_
+        sed -i "s|\${SERVICE_NAME}|$(serviceName)|g" $_
+        #JobCreateApplicationPlan
+        sed -i "s|\${PLAN_NAME}|$(planName)|g"  $(projectId)/toolbox/$(jobCreateApplicationPlan)
+        sed -i "s|\${3SCALE_REMOTE_INSTANCE}|$(3scaleRemoteInstance)|g" $_
+        sed -i "s|\${SERVICE_NAME}|$(serviceName)|g" $_
+        sed -i "s|\${PLAN_DESCRIPTION}|$(planDescription)|g" $_
+        #JobCreateApplication
+        sed -i "s|\${APPLICATION_NAME}|$(applicationName)|g"  $(projectId)/toolbox/$(jobCreateApplication)
+        sed -i "s|\${3SCALE_REMOTE_INSTANCE}|$(3scaleRemoteInstance)|g" $_
+        sed -i "s|\${USER_ACCOUNT}|$(userAccount)|g" $_
+        sed -i "s|\${DESCRIPTION_NAME}|$(descriptionName)|g" $_
+        sed -i "s|\${DESCRIPTION}|$(description)|g" $_
+        sed -i "s|\${SERVICE_NAME}|$(serviceName)|g" $_
+        sed -i "s|\${PLAN_NAME}|$(planName)|g"  $_
+        #JobPromoteAPI
+        sed -i "s|\${3SCALE_REMOTE_INSTANCE}|$(3scaleRemoteInstance)|g"  $(projectId)/toolbox/$(jobPromoteApi)
+        sed -i "s|\${SERVICE_NAME}|$(serviceName)|g" $_
+      failOnStderr: true
+      displayName: Change YAML Variable
+    - script: |
+        oc project 3scale-toolbox
+      failOnStderr: true
+      displayName: Use Project
+    - script: |
+        oc delete configmap openapi --ignore-not-found
+        sleep 5
+        oc create configmap openapi --from-file="$(projectId)/contractFirst/openApi.json"
+      failOnStderr: true
+      displayName: Fetch OpenAPI
+    - script: |
+        oc create -f  $(projectId)/toolbox/$(jobImportApi)
+        sleep 10
+        oc logs -f job/3scale-import-api
+      failOnStderr: true
+      displayName: Import open API
+    - script: |
+        oc create -f  $(projectId)/toolbox/$(jobCreateApplicationPlan)
+        sleep 15
+        oc logs -f job/3scale-aplication-plan
+      failOnStderr: true
+      displayName: Create application plan
+    - script: |
+        oc create -f  $(projectId)/toolbox/$(jobCreateApplication)
+        sleep 5
+        oc logs -f job/3scale-application
+      failOnStderr: true
+      displayName: Create application
+    - script: |
+        oc create -f  $(projectId)/toolbox/$(jobPromoteApi)
+        sleep 5
+        oc logs -f job/3scale-promove-production
+      failOnStderr: true
+      displayName: Promote API
+    - script: |
+        oc delete job 3scale-import-api --ignore-not-found
+        oc delete job 3scale-aplication-plan --ignore-not-found
+        oc delete job 3scale-application --ignore-not-found
+        oc delete job 3scale-promove-production --ignore-not-found
+      failOnStderr: true
+      displayName: Delete jobs
