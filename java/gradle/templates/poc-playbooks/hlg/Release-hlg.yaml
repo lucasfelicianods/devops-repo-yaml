@@ -24,14 +24,6 @@ stages:
         script: |
           helm lint java/gradle/templates/$(projectId)/helm
         failOnStderr: true
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)'
-        Contents: |
-          java/gradle/templates/$(projectId)/helm/**
-        TargetFolder: '$(system.defaultworkingdirectory)'
-        OverWrite: true
-      displayName: Copy Helm Files
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
