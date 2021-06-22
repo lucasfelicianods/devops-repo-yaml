@@ -27,12 +27,12 @@ stages:
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
-        namespace: '$(projectId)-hlg'
+        namespace: '$(projectId)$(PreReleaseLabelWithDash)'
         command: 'upgrade'
         chartType: 'FilePath'
         chartPath: 'java/gradle/templates/$(projectId)/helm'
-        releaseName: '$(projectId)-hlg'
-        overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=0.3.1-hlg'
+        releaseName: '$(projectId)$(PreReleaseLabelWithDash)'
+        overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=$(GitVersion.MajorMinorPatch)$(PreReleaseLabelWithDash)'
         arguments: '--timeout 300s --history-max 10'
       displayName: Helm Deploy
   - job: ThreeScale
