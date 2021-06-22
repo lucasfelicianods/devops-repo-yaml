@@ -4,11 +4,9 @@ stages:
   #dependsOn: CheckOutHelmRepo
   #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:
-  - deployment: Deployment
-    displayName: Deployment
+  - deployment: DeployHomolog
+    displayName: Deploy Homolog
     environment: poc-playbooks
-  - job: Release
-    displayName: Release
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
@@ -17,6 +15,7 @@ stages:
         connectionType: 'OpenShift Connection Service'
         openshiftService: 'sc-sa-az-devops'
         cmd: oc project
+      displayName: OpenShift Connect
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'specific'
@@ -26,6 +25,7 @@ stages:
         downloadType: 'single'
         artifactName: 'helm'
         downloadPath: '$(Build.ArtifactStagingDirectory)'
+      displayName: Download Build Artifacts
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
@@ -35,6 +35,5 @@ stages:
         chartPath: '$(Build.ArtifactStagingDirectory)/helm'
         releaseName: '$(projectId)-hlg'
         overrideValues: 'image.repository=lightregistry.azurecr.io/$(projectId)_hlg,image.tag=0.3.1-hlg'
-        #valueFile: 'values.yaml'
-        #recreate: true
         force: true
+      displayName: Helm Deploy
