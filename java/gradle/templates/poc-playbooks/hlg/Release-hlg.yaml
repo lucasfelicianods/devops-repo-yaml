@@ -16,25 +16,30 @@ stages:
       displayName: OpenShift Connect
       inputs:
         openshiftService: 'sc-sa-az-devops'
-    - task: DownloadBuildArtifacts@1
+    - task: Bash@3
+      displayName: Helm Check lint
       inputs:
-        buildType: 'specific'
-        project: '$(projectId)'
-        pipeline: '$(projectId)-hlg'
-        buildVersionToDownload: 'latest'
-        downloadType: 'single'
-        artifactName: 'helm'
-        downloadPath: '$(Build.ArtifactStagingDirectory)'
-      displayName: Download Build Artifacts
+        targetType: 'inline'
+        script: |
+          helm lint java/gradle/templates/$(projectId)/helm
+        failOnStderr: true
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(system.defaultworkingdirectory)'
+        Contents: |
+          java/gradle/templates/$(projectId)/helm/**
+        TargetFolder: '$(system.defaultworkingdirectory)'
+        OverWrite: true
+      displayName: Copy Helm Files
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
         namespace: '$(projectId)-hlg'
         command: 'upgrade'
         chartType: 'FilePath'
-        chartPath: '$(Build.ArtifactStagingDirectory)/helm'
+        chartPath: '$(system.defaultworkingdirectory)/helm'
         releaseName: '$(projectId)-hlg'
-        overrideValues: 'image.repository=lightregistry.azurecr.io/$(projectId)_hlg,image.tag=0.3.1-hlg'
+        overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=0.3.1-hlg'
         arguments: '--timeout 300s --history-max 10'
       displayName: Helm Deploy
   - job: ThreeScale
