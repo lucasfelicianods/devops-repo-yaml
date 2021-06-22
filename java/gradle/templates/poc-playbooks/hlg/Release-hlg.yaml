@@ -13,6 +13,12 @@ stages:
       vmImage: '$(vmImageAZ)'
     steps:
     - checkout: devops-repo-yaml
+    - task: gitversion/setup@0
+      displayName: Install GitTools
+      inputs:
+        versionSpec: '5.6.8'
+    - task: gitversion/execute@0
+      displayName: Use GitVersion 
     - task: redhat.openshift-vsts.oc-setup-task.oc-setup@2
       displayName: OpenShift Connect
       inputs:
