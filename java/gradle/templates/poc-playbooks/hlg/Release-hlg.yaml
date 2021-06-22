@@ -52,18 +52,18 @@ stages:
       displayName: Git checkout Repo
     - script: |
 
-        #JobImportAPI
+        # Task Import OpenAPI
         sed -i "s|\${3SCALE_REMOTE_INSTANCE}|$(3scaleRemoteInstance)|g"   $(projectId)/toolbox/$(jobImportApi)
         sed -i "s|\${OPEN_API_DIR}|$(openApiDir)|g" $_
         sed -i "s|\${OIDC_ISSUER}|$(oidcIssuer)|g" $_
         sed -i "s|\${ISSUER_TYPE}|$(issuerType)|g"  $_
         sed -i "s|\${SERVICE_NAME}|$(serviceName)|g" $_
-        #JobCreateApplicationPlan
+        # Task Create Application Plan
         sed -i "s|\${PLAN_NAME}|$(planName)|g"  $(projectId)/toolbox/$(jobCreateApplicationPlan)
         sed -i "s|\${3SCALE_REMOTE_INSTANCE}|$(3scaleRemoteInstance)|g" $_
         sed -i "s|\${SERVICE_NAME}|$(serviceName)|g" $_
         sed -i "s|\${PLAN_DESCRIPTION}|$(planDescription)|g" $_
-        #JobCreateApplication
+        # Task Create Application
         sed -i "s|\${APPLICATION_NAME}|$(applicationName)|g"  $(projectId)/toolbox/$(jobCreateApplication)
         sed -i "s|\${3SCALE_REMOTE_INSTANCE}|$(3scaleRemoteInstance)|g" $_
         sed -i "s|\${USER_ACCOUNT}|$(userAccount)|g" $_
@@ -71,7 +71,7 @@ stages:
         sed -i "s|\${DESCRIPTION}|$(description)|g" $_
         sed -i "s|\${SERVICE_NAME}|$(serviceName)|g" $_
         sed -i "s|\${PLAN_NAME}|$(planName)|g"  $_
-        #JobPromoteAPI
+        # Task Promote API
         sed -i "s|\${3SCALE_REMOTE_INSTANCE}|$(3scaleRemoteInstance)|g"  $(projectId)/toolbox/$(jobPromoteApi)
         sed -i "s|\${SERVICE_NAME}|$(serviceName)|g" $_
       failOnStderr: true
@@ -91,19 +91,19 @@ stages:
         sleep 10
         oc logs -f job/3scale-import-api
       failOnStderr: true
-      displayName: Import open API
+      displayName: Import OpenAPI
     - script: |
         oc create -f  $(projectId)/toolbox/$(jobCreateApplicationPlan)
         sleep 15
         oc logs -f job/3scale-aplication-plan
       failOnStderr: true
-      displayName: Create application plan
+      displayName: Create Application Plan
     - script: |
         oc create -f  $(projectId)/toolbox/$(jobCreateApplication)
         sleep 5
         oc logs -f job/3scale-application
       failOnStderr: true
-      displayName: Create application
+      displayName: Create Application
     - script: |
         oc create -f  $(projectId)/toolbox/$(jobPromoteApi)
         sleep 5

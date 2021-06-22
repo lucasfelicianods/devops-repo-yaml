@@ -6,3 +6,4 @@ variables:
 - group: group-gradle
 - group: group-general
 - group: group-artifacts
+- group: group-3scale
