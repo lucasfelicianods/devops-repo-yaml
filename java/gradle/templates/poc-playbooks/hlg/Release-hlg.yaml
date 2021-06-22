@@ -30,7 +30,7 @@ stages:
         namespace: '$(projectId)-hlg'
         command: 'upgrade'
         chartType: 'FilePath'
-        chartPath: '$(system.defaultworkingdirectory)/helm'
+        chartPath: 'java/gradle/templates/$(projectId)/helm'
         releaseName: '$(projectId)-hlg'
         overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=0.3.1-hlg'
         arguments: '--timeout 300s --history-max 10'
