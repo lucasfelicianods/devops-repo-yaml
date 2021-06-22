@@ -7,7 +7,7 @@ revisionHistoryCount: 5
 
 image:
   repository: lightregistry.azurecr.io/camel-quarkus-gradle-ci_prd:latest
-  tag: latest
+  #tag: latest
   pullPolicy: Always
 
 imagePullSecrets: []
