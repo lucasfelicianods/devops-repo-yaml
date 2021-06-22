@@ -22,7 +22,7 @@ stages:
         key: 'gradle | "$(Agent.OS)"'
         path: $(GradleCache)
     - script: |
-        ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)  
+        ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch)  
         ./gradlew --stop
       failOnStderr: true    
       displayName: Build Test
