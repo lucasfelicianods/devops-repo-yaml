@@ -4,7 +4,7 @@ stages:
   #dependsOn: CheckOutHelmRepo
   #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:
-  - deployment: DeployHomolog
+  - job: DeployHomolog
     displayName: Deploy Homolog
     environment: poc-playbooks
     pool:
