@@ -61,11 +61,11 @@ stages:
         sed -i "s|\${OPEN_API_DIR}|$(openApiDir)|g" $_
         sed -i "s|\${OIDC_ISSUER}|$(oidcIssuer)|g" $_
         sed -i "s|\${ISSUER_TYPE}|$(issuerType)|g"  $_
-        sed -i "s|\${SERVICE_NAME}|$(projectId)$(tag3)|g" $_
+        sed -i "s|\${SERVICE_NAME}|$(projectId)$(PreReleaseLabelWithDash)|g" $_
         # Task Create Application Plan
         sed -i "s|\${PLAN_NAME}|$(planName)|g"  $(projectId)/toolbox/$(jobCreateApplicationPlan)
         sed -i "s|\${3SCALE_REMOTE_INSTANCE}|$(3scaleRemoteInstance)|g" $_
-        sed -i "s|\${SERVICE_NAME}|$(projectId)$(tag3)|g" $_
+        sed -i "s|\${SERVICE_NAME}|$(projectId)$(PreReleaseLabelWithDash)|g" $_
         sed -i "s|\${PLAN_DESCRIPTION}|$(planDescription)|g" $_
         # Task Create Application
         sed -i "s|\${APPLICATION_NAME}|$(applicationName)|g"  $(projectId)/toolbox/$(jobCreateApplication)
@@ -73,11 +73,11 @@ stages:
         sed -i "s|\${USER_ACCOUNT}|$(userAccount)|g" $_
         sed -i "s|\${DESCRIPTION_NAME}|$(descriptionName)|g" $_
         sed -i "s|\${DESCRIPTION}|$(description)|g" $_
-        sed -i "s|\${SERVICE_NAME}|$(projectId)$(tag3)|g" $_
+        sed -i "s|\${SERVICE_NAME}|$(projectId)$(PreReleaseLabelWithDash)|g" $_
         sed -i "s|\${PLAN_NAME}|$(planName)|g"  $_
         # Task Promote API
         sed -i "s|\${3SCALE_REMOTE_INSTANCE}|$(3scaleRemoteInstance)|g"  $(projectId)/toolbox/$(jobPromoteApi)
-        sed -i "s|\${SERVICE_NAME}|$(projectId)$(tag3)|g" $_
+        sed -i "s|\${SERVICE_NAME}|$(projectId)$(PreReleaseLabelWithDash)|g" $_
       failOnStderr: true
       displayName: Change YAML Variable
     - script: |
