@@ -26,5 +26,15 @@ stages:
         downloadType: 'single'
         artifactName: 'helm'
         downloadPath: '$(Build.ArtifactStagingDirectory)'
-    - script: |
-        helm upgrade --namespace $(projectId)-hlg --install --set image.repository=lightregistry.azurecr.io/$(projectId)_hlg --wait --timeout 600s --history-max 5 $(projectId)-hlg $(Build.ArtifactStagingDirectory)/helm
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'None'
+        namespace: '$(projectId)'
+        command: 'upgrade'
+        chartType: 'FilePath'
+        chartPath: '$(Build.ArtifactStagingDirectory)/helm'
+        releaseName: '$(projectId)-hlg'
+        overrideValues: 'image.repository=lightregistry.azurecr.io/$(projectId)_hlg'
+        valueFile: 'values.yaml'
+        recreate: true
+        force: true
