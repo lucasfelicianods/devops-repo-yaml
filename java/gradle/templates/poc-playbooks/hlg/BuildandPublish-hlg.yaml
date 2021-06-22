@@ -1,7 +1,7 @@
 stages:
 - stage: BuildandPublish
   displayName: Build and Publish
-  dependsOn: CheckOutHelmRepo
+  dependsOn: UnitTest
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:
   - job: BuildandPublish
