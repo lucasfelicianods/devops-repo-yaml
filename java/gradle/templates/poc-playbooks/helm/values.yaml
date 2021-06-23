@@ -46,4 +46,21 @@ affinity: {}
 openshift:
   enabled: true
 
-        
+volumes:
+  name: secretpocplaybook
+  secret:
+    secretName: secretpocplaybook
+    defaultMode: 420
+
+volumeMounts:
+  name: secretpocplaybook
+  mountPath: /tmp/certificate
+
+envFrom:
+  configMapRef:
+    name: poc-playbooks-cfg-map
+
+secret:
+  metadata:
+    name: secretpocplaybook
+
