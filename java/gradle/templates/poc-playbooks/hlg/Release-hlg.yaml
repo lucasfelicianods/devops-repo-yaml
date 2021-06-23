@@ -8,7 +8,7 @@ stages:
     displayName: Approval
     environment: poc-playbooks
   - job: CheckHelmArtifact
-    displayname: Check Helm and Artifact
+    displayName: Check Helm and Artifact
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
