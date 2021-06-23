@@ -12,7 +12,13 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - checkout: poc-playbooks
+    - checkout: devops-repo-yaml
+    - script: |
+        git clone https://$(gitUsername):$(gitPassword)@github.com/ArquiteturaCorporativaLight/$(projectId).git
+      displayName: Git Clone Repo
+    - script: |
+        cd $(projectId)
+      displayName: Enter directory
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
@@ -23,7 +29,6 @@ stages:
       displayName: OpenShift Connect
       inputs:
         openshiftService: 'sc-sa-az-devops'
-    - checkout: devops-repo-yaml
     - task: Bash@3
       displayName: Helm Check lint
       inputs:
