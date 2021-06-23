@@ -13,12 +13,8 @@ stages:
       vmImage: '$(vmImageAZ)'
     steps:
     - checkout: devops-repo-yaml
-    - script: |
-        git clone https://$(gitUsername):$(gitPassword)@github.com/ArquiteturaCorporativaLight/$(projectId).git
-      displayName: Git Clone Repo
-    - script: |
-        cd $(projectId)
-      displayName: Enter directory
+    - checkout: poc-playbooks
+      path: .git
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
