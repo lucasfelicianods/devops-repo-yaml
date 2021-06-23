@@ -90,6 +90,18 @@ stages:
       inputs:
         openshiftService: 'sc-sa-az-devops'
     - script: |
+        oc project 3scale-toolbox
+      failOnStderr: true
+      displayName: Use Project
+    - script: |
+        oc delete job 3scale-import-api --ignore-not-found
+        oc delete job 3scale-aplication-plan --ignore-not-found
+        oc delete job 3scale-application --ignore-not-found
+        oc delete job 3scale-promove-production --ignore-not-found
+        oc delete configmap openapi --ignore-not-found
+      failOnStderr: true
+      displayName: Delete objects
+    - script: |
         git clone https://$(gitUsername):$(gitPassword)@github.com/ArquiteturaCorporativaLight/$(projectId).git
       displayName: Git Clone Repo
     - script: |
@@ -119,12 +131,6 @@ stages:
       failOnStderr: true
       displayName: Change YAML Variable
     - script: |
-        oc project 3scale-toolbox
-      failOnStderr: true
-      displayName: Use Project
-    - script: |
-        oc delete configmap openapi --ignore-not-found
-        sleep 5
         oc create configmap openapi --from-file="$(projectId)/contractFirst/openApi.json"
       failOnStderr: true
       displayName: Fetch OpenAPI
@@ -152,10 +158,3 @@ stages:
         oc logs -f job/3scale-promove-production
       failOnStderr: true
       displayName: Promote API
-    - script: |
-        oc delete job 3scale-import-api --ignore-not-found
-        oc delete job 3scale-aplication-plan --ignore-not-found
-        oc delete job 3scale-application --ignore-not-found
-        oc delete job 3scale-promove-production --ignore-not-found
-      failOnStderr: true
-      displayName: Delete jobs
