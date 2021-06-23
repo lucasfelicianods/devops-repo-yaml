@@ -68,9 +68,6 @@ stages:
         chartType: 'FilePath'
         chartPath: '$(Build.ArtifactStagingDirectory)/helm'
         releaseName: '$(projectId)-hlg'
-        recreate: true
-        resetValues: true
-        force: true
         overrideValues: |
           image.repository=$(containerRegistry)/$(projectId)_hlg
           image.tag=$(GitVersion.MajorMinorPatch)-hlg
