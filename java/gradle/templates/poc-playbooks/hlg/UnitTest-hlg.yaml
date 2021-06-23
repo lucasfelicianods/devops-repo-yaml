@@ -8,13 +8,6 @@ stages:
       vmImage: '$(vmImageAZ)'
     steps:
     - checkout: poc-playbooks
-    - script: |
-        Build.SourcesDirectory=poc-playbooks
-        dir $(Build.SourcesDirectory)
-    - checkout: devops-repo-yaml
-    - script: |
-        Build.SourcesDirectory=devops-repo-yaml
-        dir $(Build.SourcesDirectory)
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:

@@ -7,14 +7,39 @@ stages:
   - deployment: Approval
     displayName: Approval
     environment: poc-playbooks
+  - job: CheckHelmArtifact
+    displayname: Check Helm and Artifact
+    pool:
+      vmImage: '$(vmImageAZ)'
+    steps:
+    - checkout: devops-repo-yaml
+    - task: Bash@3
+      displayName: Helm lint
+      inputs:
+        targetType: 'inline'
+        script: |
+          helm lint java/gradle/templates/$(projectId)/helm
+        failOnStderr: true
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(system.defaultworkingdirectory)'
+        Contents: |
+          java/gradle/templates/$(projectId)/helm/**
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/'
+        OverWrite: true
+      displayName: Copy Files
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm'
+        ArtifactName: 'helm'
+        publishLocation: 'Container'
+      displayName: Publish and Build Artifacts     
   - job: DeploytoOpenShift
     displayName: Deploy to OpenShift
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - checkout: devops-repo-yaml
     - checkout: poc-playbooks
-      path: .git
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
@@ -25,20 +50,23 @@ stages:
       displayName: OpenShift Connect
       inputs:
         openshiftService: 'sc-sa-az-devops'
-    - task: Bash@3
-      displayName: Helm Check lint
+    - task: DownloadBuildArtifacts@1
       inputs:
-        targetType: 'inline'
-        script: |
-          helm lint java/gradle/templates/$(projectId)/helm
-        failOnStderr: true
+        buildType: 'specific'
+        project: '$(projectId)'
+        pipeline: '$(projectId)-hlg'
+        buildVersionToDownload: 'latest'
+        downloadType: 'single'
+        artifactName: 'helm'
+        downloadPath: '$(Build.ArtifactStagingDirectory)'
+      displayName: Download Build Artifacts
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
         namespace: '$(projectId)-hlg'
         command: 'upgrade'
         chartType: 'FilePath'
-        chartPath: 'java/gradle/templates/$(projectId)/helm'
+        chartPath: '$(Build.ArtifactStagingDirectory)/helm'
         releaseName: '$(projectId)-hlg'
         overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=$(GitVersion.MajorMinorPatch)-hlg'
         arguments: '--timeout 300s --history-max 10'
