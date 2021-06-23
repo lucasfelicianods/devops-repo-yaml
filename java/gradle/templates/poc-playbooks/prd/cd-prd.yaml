@@ -7,8 +7,36 @@ stages:
   - deployment: Approval
     displayName: Approval
     environment: poc-playbooks
-  - job: DeploytoOpenShift
+  - job: CheckOutHelmRepo
     dependsOn: Approval
+    displayName: Helm Check
+    pool:
+      vmImage: '$(vmImageAZ)'
+    steps:
+    - checkout: devops-repo-yaml
+    - task: Bash@3
+      displayName: Helm lint
+      inputs:
+        targetType: 'inline'
+        script: |
+          helm lint java/gradle/templates/$(projectId)/helm
+        failOnStderr: true
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(system.defaultworkingdirectory)'
+        Contents: |
+          java/gradle/templates/$(projectId)/helm/**
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/'
+        OverWrite: true
+      displayName: Copy Files
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm'
+        ArtifactName: 'helm'
+        publishLocation: 'Container'
+      displayName: Publish and Build Artifacts
+  - job: DeploytoOpenShift
+    dependsOn: CheckOutHelmRepo
     displayName: Deploy to OpenShift
     pool:
       vmImage: '$(vmImageAZ)'
@@ -24,17 +52,14 @@ stages:
       displayName: OpenShift Connect
       inputs:
         openshiftService: 'sc-sa-az-devops'
-    - script: |
-        echo $(buildIdHelmArtifact)
     - task: DownloadBuildArtifacts@1
       inputs:
-        buildType: 'specific'
-        project: '$(projectId)'
-        pipeline: '$(projectId)-hlg'
-        buildVersionToDownload: 'specific'
-        buildId: '$(buildIdHelmArtifact)'
+        buildType: 'current'
+        buildVersionToDownload: 'latest'
         downloadType: 'single'
-        downloadPath: '$(System.ArtifactsDirectory)'
+        artifactName: 'helm'
+        downloadPath: '$(Build.ArtifactStagingDirectory)'
+      displayName: Download Build Artifacts
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
