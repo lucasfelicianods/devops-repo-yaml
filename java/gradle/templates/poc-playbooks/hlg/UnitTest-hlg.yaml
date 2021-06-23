@@ -8,8 +8,13 @@ stages:
       vmImage: '$(vmImageAZ)'
     steps:
     - checkout: poc-playbooks
-      path: poc-playbooks
-    - script: dir $(Build.SourcesDirectory)
+    - script: |
+        Build.SourcesDirectory=poc-playbooks
+        dir $(Build.SourcesDirectory)
+    - checkout: devops-repo-yaml
+    - script: |
+        Build.SourcesDirectory=devops-repo-yaml
+        dir $(Build.SourcesDirectory)
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
@@ -19,8 +24,6 @@ stages:
     - bash: |
         echo "##vso[task.setvariable variable=HOME_DIRECTORY;]$HOME"
       displayName: Set Variable
-    - checkout: devops-repo-yaml
-    - script: dir $(Build.SourcesDirectory)
     - task: Cache@2
       displayName: Gradle Caches
       inputs:
