@@ -24,6 +24,8 @@ stages:
       displayName: OpenShift Connect
       inputs:
         openshiftService: 'sc-sa-az-devops'
+    - script: |
+        echo $(buildVersionHelmArtifact)
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'specific'
