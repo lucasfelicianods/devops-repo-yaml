@@ -18,6 +18,8 @@ stages:
     - bash: |
         echo "##vso[task.setvariable variable=HOME_DIRECTORY;]$HOME"
       displayName: Set Variable
+    - checkout: devops-repo-yaml
+    - script: dir $(Build.SourcesDirectory)
     - task: Cache@2
       displayName: Gradle Caches
       inputs:
