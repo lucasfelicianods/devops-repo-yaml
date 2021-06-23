@@ -29,7 +29,7 @@ stages:
         buildType: 'specific'
         project: '$(projectId)'
         pipeline: '$(projectId)-hlg'
-        buildVersionToDownload: 'latest'
+        buildVersionToDownload: '$(buildVersionHelmArtifact)'
         downloadType: 'single'
         downloadPath: '$(System.ArtifactsDirectory)'
     - task: HelmDeploy@0
