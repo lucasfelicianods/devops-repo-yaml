@@ -7,41 +7,18 @@ stages:
   - deployment: Approval
     displayName: Approval
     environment: poc-playbooks
-  - job: CheckHelm
-    displayName: Check Helm
-    pool:
-      vmImage: '$(vmImageAZ)'
-    steps:
-    - checkout: devops-repo-yaml
-    - task: Bash@3
-      displayName: Helm lint
-      inputs:
-        targetType: 'inline'
-        script: |
-          helm lint java/gradle/templates/$(projectId)/helm
-        failOnStderr: true
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)'
-        Contents: |
-          java/gradle/templates/$(projectId)/helm/**
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/'
-        OverWrite: true
-      displayName: Copy Helm Files
-    - script: |
-        dir $(Build.ArtifactStagingDirectory)
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm'
-        ArtifactName: 'helm'
-        publishLocation: 'Container'
-      displayName: Publish Build Helm Artifacts     
-  - job: DeploytoOpenShift
+   - job: DeploytoOpenShift
     displayName: Deploy to OpenShift
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - checkout: devops-repo-yaml
+    - checkout: poc-playbooks
+    - task: gitversion/setup@0
+      displayName: Install GitTools
+      inputs:
+        versionSpec: '5.6.8'
+    - task: gitversion/execute@0
+      displayName: Use GitVersion 
     - task: redhat.openshift-vsts.oc-setup-task.oc-setup@2
       displayName: OpenShift Connect
       inputs:
@@ -56,8 +33,6 @@ stages:
         artifactName: 'helm'
         downloadPath: '$(Build.ArtifactStagingDirectory)'
       displayName: Download Build Artifacts
-    - script: |
-        dir $(Build.ArtifactStagingDirectory)
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
@@ -66,7 +41,7 @@ stages:
         chartType: 'FilePath'
         chartPath: '$(Build.ArtifactStagingDirectory)/helm'
         releaseName: '$(projectId)-hlg'
-        overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=latest'
+        overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=$(GitVersion.MajorMinorPatch)-hlg'
         arguments: '--timeout 300s --history-max 10'
       displayName: Helm Deploy
   - job: ThreeScale
