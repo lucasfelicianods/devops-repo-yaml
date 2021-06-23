@@ -60,7 +60,7 @@ stages:
         buildVersionToDownload: 'latest'
         downloadType: 'single'
         artifactName: 'helm'
-        downloadPath: '$(Build.ArtifactStagingDirectory)'
+        downloadPath: '$(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm'
       displayName: Download Build Artifacts
     - script: |
         dir $(Build.ArtifactStagingDirectory)
@@ -70,7 +70,7 @@ stages:
         namespace: '$(projectId)-hlg'
         command: 'upgrade'
         chartType: 'FilePath'
-        chartPath: '$(Build.ArtifactStagingDirectory)/helm'
+        chartPath: '$(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm'
         releaseName: '$(projectId)-hlg'
         overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=$(GitVersion.MajorMinorPatch)-hlg'
         arguments: '--timeout 300s --history-max 10'
