@@ -18,9 +18,9 @@ stages:
         openshiftService: 'sc-sa-az-devops'
     - task: DownloadBuildArtifacts@1
       inputs:
-        buildType: 'specific'
-        project: '$(projectId)'
-        pipeline: '$(projectId)-hlg'
+        buildType: 'current'
+        #project: '$(projectId)'
+        #pipeline: '$(projectId)-hlg'
         buildVersionToDownload: 'latest'
         downloadType: 'single'
         artifactName: 'helm'
