@@ -25,13 +25,14 @@ stages:
       inputs:
         openshiftService: 'sc-sa-az-devops'
     - script: |
-        echo $(buildVersionHelmArtifact)
+        echo $(buildIdHelmArtifact)
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'specific'
         project: '$(projectId)'
         pipeline: '$(projectId)-hlg'
-        buildVersionToDownload: '$(buildVersionHelmArtifact)'
+        buildVersionToDownload: 'specific'
+        buildId: '$(buildIdHelmArtifact)'
         downloadType: 'single'
         downloadPath: '$(System.ArtifactsDirectory)'
     - task: HelmDeploy@0
