@@ -1,13 +1,14 @@
 stages:
 - stage: TagAndPush
   displayName: Tag And Push
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/hotfix/'))
   jobs:
   - job: TagAndPush
     displayName: Tag And Push
     pool:
       vmImage: $(vmImageAZ)
     steps:
+    - checkout: poc-playbooks
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
