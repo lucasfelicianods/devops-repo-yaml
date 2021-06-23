@@ -7,8 +7,8 @@ stages:
   - deployment: Approval
     displayName: Approval
     environment: poc-playbooks
-  - job: CheckHelmArtifact
-    displayName: Check Helm and Artifact
+  - job: CheckHelm
+    displayName: Check Helm
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
@@ -27,13 +27,13 @@ stages:
           java/gradle/templates/$(projectId)/helm/**
         TargetFolder: '$(Build.ArtifactStagingDirectory)/'
         OverWrite: true
-      displayName: Copy Files
+      displayName: Copy Helm Files
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/helm'
         ArtifactName: 'helm'
         publishLocation: 'Container'
-      displayName: Publish and Build Artifacts     
+      displayName: Publish Build Helm Artifacts     
   - job: DeploytoOpenShift
     displayName: Deploy to OpenShift
     pool:
@@ -58,7 +58,7 @@ stages:
         buildVersionToDownload: 'latest'
         downloadType: 'single'
         artifactName: 'helm'
-        downloadPath: '$(Build.ArtifactStagingDirectory)'
+        downloadPath: '$(Build.ArtifactStagingDirectory)/helm'
       displayName: Download Build Artifacts
     - task: HelmDeploy@0
       inputs:
@@ -90,12 +90,6 @@ stages:
     - script: |
         git clone https://$(gitUsername):$(gitPassword)@github.com/ArquiteturaCorporativaLight/$(projectId).git
       displayName: Git Clone Repo
-    - task: gitversion/setup@0
-      displayName: Install GitTools
-      inputs:
-        versionSpec: '5.6.8'
-    - task: gitversion/execute@0
-      displayName: Use GitVersion
     - script: |
 
         # Task Import OpenAPI
