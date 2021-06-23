@@ -25,12 +25,12 @@ stages:
         SourceFolder: '$(system.defaultworkingdirectory)'
         Contents: |
           java/gradle/templates/$(projectId)/helm/**
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
         OverWrite: true
       displayName: Copy Helm Files
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/helm'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'helm'
         publishLocation: 'Container'
       displayName: Publish Build Helm Artifacts     
@@ -58,7 +58,7 @@ stages:
         buildVersionToDownload: 'latest'
         downloadType: 'single'
         artifactName: 'helm'
-        downloadPath: '$(Build.ArtifactStagingDirectory)/helm'
+        downloadPath: '$(Build.ArtifactStagingDirectory)'
       displayName: Download Build Artifacts
     - task: HelmDeploy@0
       inputs:
@@ -66,7 +66,7 @@ stages:
         namespace: '$(projectId)-hlg'
         command: 'upgrade'
         chartType: 'FilePath'
-        chartPath: '$(Build.ArtifactStagingDirectory)/helm'
+        chartPath: '$(Build.ArtifactStagingDirectory)'
         releaseName: '$(projectId)-hlg'
         overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=$(GitVersion.MajorMinorPatch)-hlg'
         arguments: '--timeout 300s --history-max 10'
