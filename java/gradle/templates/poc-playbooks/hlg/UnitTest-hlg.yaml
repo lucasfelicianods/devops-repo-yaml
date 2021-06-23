@@ -7,7 +7,6 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - checkout: poc-playbooks
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
