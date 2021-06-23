@@ -43,7 +43,9 @@ stages:
         chartType: 'FilePath'
         chartPath: '$(Build.ArtifactStagingDirectory)/helm'
         releaseName: '$(projectId)-prd'
-        overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_prd,image.tag=$(GitVersion.MajorMinorPatch)'
+        overrideValues: |
+          'image.repository=$(containerRegistry)/$(projectId)_prd'
+          'image.tag=$(GitVersion.MajorMinorPatch)'
         arguments: '--timeout 300s --history-max 10'
       displayName: Helm Deploy
   - job: ThreeScale
