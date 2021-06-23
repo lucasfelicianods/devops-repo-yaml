@@ -8,6 +8,7 @@ stages:
     displayName: Approval
     environment: poc-playbooks
   - job: CheckOutHelmRepo
+    dependsOn: Approval
     displayName: Helm Check
     pool:
       vmImage: '$(vmImageAZ)'
