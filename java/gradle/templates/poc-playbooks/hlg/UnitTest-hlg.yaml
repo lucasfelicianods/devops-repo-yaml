@@ -9,8 +9,7 @@ stages:
     steps:
     - checkout: self
     - checkout: devops-repo-yaml
-    - checkout: poc-playbooks
-      path: .git
+      path: java/gradle/templates/$(projectId)/helm
     - script: dir $(Build.SourcesDirectory)
     - task: gitversion/setup@0
       displayName: Install GitTools
