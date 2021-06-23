@@ -1,39 +1,12 @@
 stages:
 - stage: DeployHomolog
   displayName: Deploy Homolog
-  #dependsOn: CheckOutHelmRepo
+  dependsOn: CheckOutHelmRepo
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:
   - deployment: Approval
     displayName: Approval
     environment: poc-playbooks
-  - job: CheckOutHelmRepo
-    displayName: Helm Check
-    pool:
-      vmImage: '$(vmImageAZ)'
-    steps:
-    - checkout: devops-repo-yaml
-    - task: Bash@3
-      displayName: Helm lint
-      inputs:
-        targetType: 'inline'
-        script: |
-          helm lint java/gradle/templates/$(projectId)/helm
-        failOnStderr: true
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)'
-        Contents: |
-          java/gradle/templates/$(projectId)/helm/**
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/'
-        OverWrite: true
-      displayName: Copy Files
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm'
-        ArtifactName: 'helm'
-        publishLocation: 'Container'
-      displayName: Publish and Build Artifacts
   - job: DeploytoOpenShift
     displayName: Deploy to OpenShift
     pool:
