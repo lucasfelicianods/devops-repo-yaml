@@ -12,13 +12,7 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - checkout: poc-playbooks
-    - task: gitversion/setup@0
-      displayName: Install GitTools
-      inputs:
-        versionSpec: '5.6.8'
-    - task: gitversion/execute@0
-      displayName: Use GitVersion 
+    - checkout: devops-repo-yaml
     - task: redhat.openshift-vsts.oc-setup-task.oc-setup@2
       displayName: OpenShift Connect
       inputs:
@@ -41,7 +35,7 @@ stages:
         chartType: 'FilePath'
         chartPath: '$(Build.ArtifactStagingDirectory)/helm'
         releaseName: '$(projectId)-hlg'
-        overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=$(GitVersion.MajorMinorPatch)-hlg'
+        overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=latest'
         arguments: '--timeout 300s --history-max 10'
       displayName: Helm Deploy
   - job: ThreeScale
