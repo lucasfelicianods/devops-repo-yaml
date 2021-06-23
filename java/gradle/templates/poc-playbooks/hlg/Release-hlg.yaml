@@ -12,6 +12,11 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
+    - checkout: poc-playbooks
+    - task: HelmInstaller@1
+      displayName: Install Helm 3.5.4
+      inputs:
+        helmVersionToInstall: '3.5.4'
     - task: redhat.openshift-vsts.oc-setup-task.oc-setup@2
       displayName: OpenShift Connect
       inputs:
@@ -19,8 +24,6 @@ stages:
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'current'
-        #project: '$(projectId)'
-        #pipeline: '$(projectId)-hlg'
         buildVersionToDownload: 'latest'
         downloadType: 'single'
         artifactName: 'helm'
@@ -34,7 +37,7 @@ stages:
         chartType: 'FilePath'
         chartPath: '$(Build.ArtifactStagingDirectory)/helm'
         releaseName: '$(projectId)-hlg'
-        overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=latest'
+        overrideValues: 'image.repository=$(containerRegistry)/$(projectId)_hlg,image.tag=$(GitVersion.MajorMinorPatch)-hlg'
         arguments: '--timeout 300s --history-max 10'
       displayName: Helm Deploy
   - job: ThreeScale
