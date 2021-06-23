@@ -28,6 +28,8 @@ stages:
         TargetFolder: '$(Build.ArtifactStagingDirectory)/'
         OverWrite: true
       displayName: Copy Helm Files
+    - script: |
+        dir $(Build.ArtifactStagingDirectory)
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/java/gradle/templates/$(projectId)/helm'
@@ -60,6 +62,8 @@ stages:
         artifactName: 'helm'
         downloadPath: '$(Build.ArtifactStagingDirectory)'
       displayName: Download Build Artifacts
+    - script: |
+        dir $(Build.ArtifactStagingDirectory)
     - task: HelmDeploy@0
       inputs:
         connectionType: 'None'
