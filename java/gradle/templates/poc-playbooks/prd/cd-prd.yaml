@@ -1,7 +1,7 @@
 stages:
 - stage: DeployPrd
   displayName: Deploy Production
-  dependsOn: TagAndPush
+  #dependsOn: TagAndPush
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
   jobs:
   - deployment: Approval
