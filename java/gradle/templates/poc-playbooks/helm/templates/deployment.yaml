@@ -60,6 +60,8 @@ spec:
           env:
             - name: ENVIRONMENT
               value: "{{ .Values.environment }}"
+            - name: TZ
+              value: America/Sao_Paulo
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
