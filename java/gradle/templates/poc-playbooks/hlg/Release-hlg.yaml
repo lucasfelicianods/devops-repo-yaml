@@ -136,7 +136,7 @@ stages:
       displayName: Fetch OpenAPI
     - script: |
         oc create -f  $(projectId)/toolbox/$(jobImportApi)
-        sleep 10
+        sleep 30
         oc logs -f job/3scale-import-api
       failOnStderr: true
       displayName: Import OpenAPI
