@@ -130,9 +130,11 @@ stages:
         sed -i "s|\${SERVICE_NAME}|$(projectId)-hlg|g" $_
       failOnStderr: true
       displayName: Change YAML Variable
-    - script: |
-        oc create configmap openapi --from-file="$(projectId)/contractFirst/openApi.json"
-      failOnStderr: true
+    - task: oc-cmd@2
+      inputs:
+        connectionType: 'OpenShift Connection Service'
+        openshiftService: 'sc-sa-az-devops'
+        cmd: create configmap openapi  --from-file="/$(System.DefaultWorkingDirectory)/$(projectId)/contractFirst/openApi.json"
       displayName: Fetch OpenAPI
     - task: oc-cmd@2
       inputs:
