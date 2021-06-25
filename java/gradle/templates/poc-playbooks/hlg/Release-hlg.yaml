@@ -142,7 +142,7 @@ stages:
       inputs:
         connectionType: 'OpenShift Connection Service'
         openshiftService: 'sc-sa-az-devops'
-        cmd: 'create -f  $(projectId)/toolbox/$(jobImportApi)'
+        cmd: 'create -f  /$(Agent.BuildDirectory)/$(projectId)/toolbox/$(jobImportApi)'
       displayName:
     - script: |
         oc logs -f job/3scale-import-api
