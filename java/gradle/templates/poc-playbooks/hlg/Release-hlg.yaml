@@ -134,35 +134,27 @@ stages:
         oc create configmap openapi --from-file="$(projectId)/contractFirst/openApi.json"
       failOnStderr: true
       displayName: Fetch OpenAPI
-    - script: |
-        pwd
-        ls -la
-      failOnStderr: true
     - task: oc-cmd@2
       inputs:
         connectionType: 'OpenShift Connection Service'
         openshiftService: 'sc-sa-az-devops'
         cmd: 'create -f  /$(System.DefaultWorkingDirectory)/$(projectId)/toolbox/$(jobImportApi)'
-      displayName:
-    - script: |
-        oc logs -f job/3scale-import-api
-      failOnStderr: true
-      displayName: Logs Import OpenAPI
-    - script: |
-        oc create -f  $(projectId)/toolbox/$(jobCreateApplicationPlan)
-        sleep 15
-        oc logs -f job/3scale-aplication-plan
-      failOnStderr: true
+      displayName: Import OpenAPI
+    - task: oc-cmd@2
+      inputs:
+        connectionType: 'OpenShift Connection Service'
+        openshiftService: 'sc-sa-az-devops'
+        cmd: 'create -f  /$(System.DefaultWorkingDirectory)/$(projectId)/toolbox/$(jobCreateApplicationPlan)'
       displayName: Create Application Plan
-    - script: |
-        oc create -f  $(projectId)/toolbox/$(jobCreateApplication)
-        sleep 5
-        oc logs -f job/3scale-application
-      failOnStderr: true
+    - task: oc-cmd@2
+      inputs:
+        connectionType: 'OpenShift Connection Service'
+        openshiftService: 'sc-sa-az-devops'
+        cmd: 'create -f  /$(System.DefaultWorkingDirectory)/$(projectId)/toolbox/$(jobCreateApplication)'
       displayName: Create Application
-    - script: |
-        oc create -f  $(projectId)/toolbox/$(jobPromoteApi)
-        sleep 5
-        oc logs -f job/3scale-promove-production
-      failOnStderr: true
+    - task: oc-cmd@2
+      inputs:
+        connectionType: 'OpenShift Connection Service'
+        openshiftService: 'sc-sa-az-devops'
+        cmd: 'create -f  /$(System.DefaultWorkingDirectory)/$(projectId)/toolbox/$(jobPromoteApi)'
       displayName: Promote API
