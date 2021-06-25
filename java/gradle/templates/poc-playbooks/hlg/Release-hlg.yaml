@@ -134,6 +134,10 @@ stages:
         oc create configmap openapi --from-file="$(projectId)/contractFirst/openApi.json"
       failOnStderr: true
       displayName: Fetch OpenAPI
+    - script: |
+        pwd
+        ls -la
+      failOnStderr: true
     - task: oc-cmd@2
       inputs:
         connectionType: 'OpenShift Connection Service'
