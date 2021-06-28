@@ -37,6 +37,8 @@ stages:
     - script: |
         ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=native -Dquarkus.jib.base-native-image=$(dockerBaseImage)
         ./gradlew --stop
+        pwd
+        ls -la
       failOnStderr: true 
       displayName: Build
     - task: Cache@2
