@@ -22,17 +22,10 @@ stages:
       inputs:
         key: |
           gradle | "$(Agent.OS)"
-        restoreKeys: |
-          gradle | "$(Agent.OS)"
-          gradle
         path: /home/vsts/.gradle/caches/
       displayName: Gradle Caching
     - script: |
-        echo $(Agent.OS)
-        ls -la /home/vsts/.gradle/caches/build-cache-1
-      displayName: Listando arquivos de cache
-    - script: |
-        ./gradlew test --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch)  
+        ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch)  
         ./gradlew --stop
       failOnStderr: true    
       displayName: Build Test
