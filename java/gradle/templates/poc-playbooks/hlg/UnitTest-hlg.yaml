@@ -19,12 +19,20 @@ stages:
         echo "##vso[task.setvariable variable=HOME_DIRECTORY;]$HOME"
       displayName: Set Variable
     - task: Cache@2
-      displayName: Gradle Caches
       inputs:
-        key: 'gradle | "$(Agent.OS)"'
-        path: $(GradleCache)
+        key: |
+          gradle | "$(Agent.OS)"
+        restoreKeys: |
+          gradle | "$(Agent.OS)"
+          gradle
+        path: /home/vsts/.gradle/caches/
+      displayName: Gradle Caching
     - script: |
-        ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch)  
+        echo $(Agent.OS)
+        ls -la /home/vsts/.gradle/caches/build-cache-1
+      displayName: Listando arquivos de cache
+    - script: |
+        ./gradlew test --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch)  
         ./gradlew --stop
       failOnStderr: true    
       displayName: Build Test
