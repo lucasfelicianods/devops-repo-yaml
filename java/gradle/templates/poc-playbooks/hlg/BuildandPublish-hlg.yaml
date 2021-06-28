@@ -33,12 +33,11 @@ stages:
       displayName: Gradle Caches
       inputs:
         key: 'gradle | "$(Agent.OS)"'
-        path: $(GradleCache)
+        path: $(HOME_DIRECTORY)/.gradle/caches
     - script: |
+        pwd
         ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=native -Dquarkus.jib.base-native-image=$(dockerBaseImage)
         ./gradlew --stop
-        pwd
-        ls -la
       failOnStderr: true 
       displayName: Build
     - task: Cache@2
