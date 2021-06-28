@@ -4,5 +4,4 @@ metadata:
   name: poc-playbooks-cfg-map
   namespace: poc-playbooks-hlg
 data:
-  PRNER_BB_BOLETOS_HOST: api.hm.bb.com.br/cobrancas/v2/boletos
   SSL_KEYSTORE_FILE: /tmp/certificate/keystore.jks
