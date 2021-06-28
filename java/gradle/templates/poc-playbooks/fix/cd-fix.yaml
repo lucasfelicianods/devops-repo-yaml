@@ -112,6 +112,7 @@ stages:
         sed -i "s|\${OIDC_ISSUER}|$(oidcIssuer)|g" $_
         sed -i "s|\${ISSUER_TYPE}|$(issuerType)|g"  $_
         sed -i "s|\${SERVICE_NAME}|$(projectId)-prd|g" $_
+        sed -i "s|\${ENDPOINT_API}|$(endpointAPI)|g" $_
         # Task Create Application Plan
         sed -i "s|\${PLAN_NAME}|$(planName)|g"  $(projectId)/toolbox/$(jobCreateApplicationPlan)
         sed -i "s|\${3SCALE_REMOTE_INSTANCE}|$(3scaleRemoteInstance)|g" $_
