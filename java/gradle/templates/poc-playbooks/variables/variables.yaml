@@ -2,7 +2,6 @@ variables:
 - group: group-acr
 - group: group-macmiller
 - group: group-poc-playbooks
-- group: group-gradle
 - group: group-general
 - group: group-artifacts
 - group: group-3scale

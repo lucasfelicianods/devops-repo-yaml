@@ -30,11 +30,10 @@ stages:
       displayName: Gradle Caches
       inputs:
         key: 'gradle | "$(Agent.OS)"'
-        path: /home/vsts/.gradle/caches/build-cache-1
+        path: /home/vsts/.gradle/caches/
     - script: |
-        ls -la $(Pipeline.Workspace)/.gradle/caches/
+        echo $(Agent.OS)
         ls -la /home/vsts/.gradle/caches/build-cache-1
-        ls -la /home/vsts/.gradle/caches/
       displayName: Listando arquivos de cache
     - script: |
         ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=native -Dquarkus.jib.base-native-image=$(dockerBaseImage)
