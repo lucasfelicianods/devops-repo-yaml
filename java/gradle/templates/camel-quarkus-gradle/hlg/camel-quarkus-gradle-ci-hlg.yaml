@@ -27,3 +27,7 @@ stages:
         ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch)  
         ./gradlew --stop    
       displayName: Build Test
+    - script: |
+        ls -la /home/vsts/.gradle/caches/
+        ls -la /home/vsts/.gradle/caches/build-cache-1    
+      displayName: listando cache
