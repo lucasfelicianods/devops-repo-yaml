@@ -29,7 +29,9 @@ stages:
       displayName: Gradle Caches
       inputs:
         key: 'gradle | "$(Agent.OS)"'
-        restorekeys: gradle
+        restorekeys: |
+          gradle | "$(Agent.OS)"
+          gradle
         path: /home/vsts/.gradle/caches/
         cacheHitVar: CACHE_RESTORED
     - script: |
