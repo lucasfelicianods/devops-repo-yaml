@@ -1,3 +1,4 @@
+stages:
 - stage: BuildandPublish
   displayName: Build and Publish
   dependsOn: UnitTest
