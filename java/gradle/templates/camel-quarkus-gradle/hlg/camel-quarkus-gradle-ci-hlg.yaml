@@ -17,7 +17,7 @@ stages:
     - task: Cache@2
       displayName: Gradle Caches
       inputs:
-        key: 'version2 | gradle | "$(Agent.OS)"'
+        key: 'gradle | "$(Agent.OS)"'
         path: /home/vsts/.gradle/caches/
     - script: |
         ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch)  
@@ -57,7 +57,7 @@ stages:
     - task: Cache@2
       displayName: Gradle Caches
       inputs:
-        key: 'version2| gradle | "$(Agent.OS)"'
+        key: 'gradle | "$(Agent.OS)"'
         path: /home/vsts/.gradle/caches/
     - script: |
         ls -la /home/vsts/.gradle/caches/
