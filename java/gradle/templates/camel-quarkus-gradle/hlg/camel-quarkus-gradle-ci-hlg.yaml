@@ -27,8 +27,7 @@ stages:
       displayName: listando cache
     - script: |
         ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch)  
-        ./gradlew --stop
-      condition: ne(variables.CACHE_RESTORED, 'true')    
+        ./gradlew --stop   
       displayName: Build Test
     - script: |
         ls -la /home/vsts/.gradle/caches/
