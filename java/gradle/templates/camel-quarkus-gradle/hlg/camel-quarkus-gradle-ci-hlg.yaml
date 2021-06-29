@@ -17,7 +17,7 @@ stages:
     - task: Cache@2
       displayName: Gradle Caches
       inputs:
-        key: 'gradle | "$(Agent.OS)"'
+        key: 'version2 | gradle | "$(Agent.OS)"'
         path: /home/vsts/.gradle/caches/
     - script: |
         ls -la /home/vsts/.gradle/caches/
@@ -25,8 +25,7 @@ stages:
       displayName: listando cache
     - script: |
         ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch)  
-        ./gradlew --stop
-        sleep 30   
+        ./gradlew --stop  
       displayName: Build Test
     - script: |
         ls -la /home/vsts/.gradle/caches/
