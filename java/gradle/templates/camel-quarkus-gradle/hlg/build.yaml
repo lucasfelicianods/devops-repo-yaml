@@ -28,7 +28,7 @@ stages:
     - task: Cache@2
       displayName: Gradle Caches
       inputs:
-        key: 'gradle | "$(Agent.OS)"'
+        key: 'gradle | "$(Agent.OS)" | build-cache-1.lock'
         path: /home/vsts/.gradle/caches/
     - script: |
         ls -la /home/vsts/.gradle/caches/
