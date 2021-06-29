@@ -23,7 +23,7 @@ stages:
         key: 'gradle | "$(Agent.OS)"'
         path: /home/vsts/.gradle/caches/
     - script: |
-        ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)  
+        ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch)  
         ./gradlew --stop    
       displayName: Build Test
 
@@ -62,7 +62,7 @@ stages:
         key: 'gradle | "$(Agent.OS)"'
         path: $(GradleCache)
     - script: |
-        ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(tag1) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=native -Dquarkus.jib.base-native-image=$(dockerBaseImage)
+        ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=native -Dquarkus.jib.base-native-image=$(dockerBaseImage)
         ./gradlew --stop    
       displayName: Build
     - task: Cache@2
@@ -77,11 +77,11 @@ stages:
       displayName: Save Docker image
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
     - script: |
-        ./gradlew --build-cache -PartifactId=$(projectId) -Pversion=$(tag1) -PurlArtifactsMaven=$(urlArtifactsMaven) -PfeedArtifactsMaven=$(feedArtifactsMaven) -PuserPublish=$(organizationName) -PkeyPublish=$(accessTokenMaven) -Dquarkus.package.type=native publish
+        ./gradlew --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -PurlArtifactsMaven=$(urlArtifactsMaven) -PfeedArtifactsMaven=$(feedArtifactsMaven) -PuserPublish=$(organizationName) -PkeyPublish=$(accessTokenMaven) -Dquarkus.package.type=native publish
       displayName: Artifacts
     - script: |
-        sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:$(tag1)-hlg'
-        sudo docker tag '$(containerRegistry)/$(imageRepository):$(tag1)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
+        sudo docker tag '$(containerRegistry)/$(imageRepository):$(GitVersion.MajorMinorPatch)' '$(containerRegistry)/$(imageRepository)_hlg:$(GitVersion.MajorMinorPatch)-hlg'
+        sudo docker tag '$(containerRegistry)/$(imageRepository):$(GitVersion.MajorMinorPatch)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
       displayName: Tagging
     - task: Docker@2
       displayName: Push ACR
@@ -89,7 +89,7 @@ stages:
         containerRegistry: '$(dockerRegistryServiceConnection)'
         repository: '$(imageRepository)_hlg'
         command: 'push'
-        tags: '$(tag1)-hlg'
+        tags: '$(GitVersion.MajorMinorPatch)-hlg'
     - task: Docker@2
       displayName: Push ACR latest
       inputs:
