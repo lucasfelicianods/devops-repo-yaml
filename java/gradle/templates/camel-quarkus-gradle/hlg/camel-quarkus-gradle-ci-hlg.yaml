@@ -20,15 +20,13 @@ stages:
         key: 'gradle | "$(Agent.OS)"'
         path: /home/vsts/.gradle/caches/
     - script: |
-        cat /home/vsts/.gradle/caches/build-cache-1/gc.properties
-      displayName: listando cache
-    - script: |
         ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch)  
         ./gradlew --stop  
       displayName: Build Test
     - script: |
         ls -la /home/vsts/.gradle/caches/
         ls -la /home/vsts/.gradle/caches/build-cache-1
+        ls -la /home/vsts/.gradle/caches/modules-2
       displayName: listando cache
 
 - stage: BuildandPublish
