@@ -29,7 +29,9 @@ stages:
       displayName: Gradle Caches
       inputs:
         key: 'gradle | "$(Agent.OS)"'
+        restorekeys: gradle
         path: /home/vsts/.gradle/caches/
+        cacheHitVar: CACHE_RESTORED
     - script: |
         ls -la /home/vsts/.gradle/caches/
         ls -la /home/vsts/.gradle/caches/build-cache-1    
@@ -37,6 +39,7 @@ stages:
     - script: |
         ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=native -Dquarkus.jib.base-native-image=$(dockerBaseImage)
         ./gradlew --stop    
+      condition: ne(variables.CACHE_RESTORED, 'true') 
       displayName: Build
     - task: Cache@2
       inputs:
