@@ -21,7 +21,7 @@ stages:
       displayName: Gradle Caches
       inputs:
         key: 'gradle | "$(Agent.OS)"'
-        path: $(GradleCache)
+        path: /home/vsts/.gradle/caches/
     - script: |
         ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(tag1)  
         ./gradlew --stop    
