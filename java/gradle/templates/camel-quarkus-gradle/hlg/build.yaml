@@ -29,11 +29,7 @@ stages:
       displayName: Gradle Caches
       inputs:
         key: 'gradle | "$(Agent.OS)"'
-        restorekeys: |
-          gradle | "$(Agent.OS)"
-          gradle
         path: /home/vsts/.gradle/caches/
-        cacheHitVar: CACHE_RESTORED
     - script: |
         ls -la /home/vsts/.gradle/caches/
         ls -la /home/vsts/.gradle/caches/build-cache-1    

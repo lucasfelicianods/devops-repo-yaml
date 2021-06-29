@@ -18,18 +18,15 @@ stages:
       displayName: Gradle Caches
       inputs:
         key: 'gradle | "$(Agent.OS)"'
-        restorekeys: |
-          gradle | "$(Agent.OS)"
-          gradle
         path: /home/vsts/.gradle/caches/
-        cacheHitVar: CACHE_RESTORED
     - script: |
         ls -la /home/vsts/.gradle/caches/
         ls -la /home/vsts/.gradle/caches/build-cache-1    
       displayName: listando cache
     - script: |
         ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch)  
-        ./gradlew --stop   
+        ./gradlew --stop
+        sleep 30   
       displayName: Build Test
     - script: |
         ls -la /home/vsts/.gradle/caches/
