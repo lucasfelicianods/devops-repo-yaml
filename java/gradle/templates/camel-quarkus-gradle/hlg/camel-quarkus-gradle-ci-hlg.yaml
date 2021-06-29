@@ -25,7 +25,9 @@ stages:
       displayName: Build Test
     - script: |
         ls -la /home/vsts/.gradle/caches/
-        ls -la /home/vsts/.gradle/caches/build-cache-1    
+        ls -la /home/vsts/.gradle/caches/build-cache-1
+        cat /home/vsts/.gradle/caches/build-cache-1/gc.properties
+        cat /home/vsts/.gradle/caches/build-cache-1/build-cache-1.lock
       displayName: listando cache
 
 - stage: BuildandPublish
