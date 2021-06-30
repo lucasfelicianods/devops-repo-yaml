@@ -13,7 +13,6 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ include "camel-quarkus-gradle.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/managed-by: Helm
   strategy:
     rollingUpdate:
       maxSurge: 0
