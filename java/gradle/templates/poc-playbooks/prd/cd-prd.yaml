@@ -5,7 +5,6 @@ stages:
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
   jobs:
   - job: CheckOutHelmRepo
-    dependsOn: Approval
     displayName: Helm Check
     pool:
       vmImage: '$(vmImageAZ)'
