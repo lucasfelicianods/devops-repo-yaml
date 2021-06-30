@@ -102,7 +102,7 @@ stages:
       failOnStderr: true
       displayName: Delete objects
     - script: |
-        git clone https://$(gitUsername):$(gitPassword)@github.com/ArquiteturaCorporativaLight/$(projectId).git
+        git clone https://$(tokenGitHub)@github.com/ArquiteturaCorporativaLight/$(projectId).git
       displayName: Git Clone Repo
     - script: |
 
