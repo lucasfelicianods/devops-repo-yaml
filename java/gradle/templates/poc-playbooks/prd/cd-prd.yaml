@@ -73,7 +73,7 @@ stages:
           image.tag=$(GitVersion.MajorMinorPatch)
         arguments: '--timeout 300s --history-max 10'
       displayName: Helm Deploy
-   - job: ThreeScale
+  - job: ThreeScale
     displayName: 3Scale
     dependsOn: DeploytoOpenShift
     pool:
