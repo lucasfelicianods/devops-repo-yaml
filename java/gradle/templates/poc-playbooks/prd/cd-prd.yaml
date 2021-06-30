@@ -4,9 +4,6 @@ stages:
   dependsOn: TagAndPush
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
   jobs:
-  - deployment: Approval
-    displayName: Approval
-    environment: poc-playbooks
   - job: CheckOutHelmRepo
     dependsOn: Approval
     displayName: Helm Check

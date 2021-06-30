@@ -3,6 +3,9 @@ stages:
   displayName: Tag And Push
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/hotfix/'))
   jobs:
+  - deployment: Approval
+    displayName: Approval
+    environment: poc-playbooks
   - job: TagAndPush
     displayName: Tag And Push
     pool:
