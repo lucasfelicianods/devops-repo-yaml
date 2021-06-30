@@ -70,6 +70,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Values.envFrom.configMapRef.name }}
+            - secretRef:
+                name: {{ .Values.envFrom.secretRef.name}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

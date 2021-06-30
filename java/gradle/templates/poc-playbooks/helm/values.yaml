@@ -59,6 +59,8 @@ volumeMounts:
 envFrom:
   configMapRef:
     name: poc-playbooks-cfg-map
+  secretRef:
+    name: poc-playbooks-keys
 
 secret:
   metadata:
