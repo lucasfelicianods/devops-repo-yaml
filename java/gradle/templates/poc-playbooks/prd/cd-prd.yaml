@@ -85,6 +85,7 @@ stages:
       displayName: OpenShift Connect
       inputs:
         openshiftService: 'sc-sa-az-devops'
+      timeoutInMinutes: 2
     - script: |
         oc project 3scale-toolbox
       failOnStderr: true

@@ -52,6 +52,7 @@ stages:
       displayName: OpenShift Connect
       inputs:
         openshiftService: 'sc-sa-az-devops'
+      timeoutInMinutes: 2
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'current'
