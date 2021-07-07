@@ -5,7 +5,7 @@ metadata:
   labels:
 {{ include "camel-quarkus-gradle.labels" . | indent 4 }}
   annotations:
-    sidecar.jaegertracing.io/inject: "true"
+    sidecar.jaegertracing.io/inject: "false"
 spec:
   replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: {{ .Values.revisionHistoryCount }}
