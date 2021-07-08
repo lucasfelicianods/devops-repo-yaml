@@ -33,8 +33,7 @@ stages:
         path: /home/vsts/.gradle/caches/
       displayName: Gradle Caching
     - script: |
-        ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=uber-jar -Dquarkus.jib.base-native-image=registry.access.redhat.com/ubi8/ubi-minimal
-        ./gradlew --stop    
+        ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=uber-jar -Dquarkus.jib.base-native-image=registry.access.redhat.com/ubi8/ubi-minimal    
       failOnStderr: true 
       displayName: Build
     - task: Cache@2
@@ -51,6 +50,7 @@ stages:
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
     - script: |
         ./gradlew --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -PurlArtifactsMaven=$(urlArtifactsMaven) -PfeedArtifactsMaven=$(feedArtifactsMaven) -PuserPublish=$(organizationName) -PkeyPublish=$(accessTokenMaven) -Dquarkus.package.type=uber-jar publish
+        ./gradlew --stop
       failOnStderr: true
       displayName: Artifacts
     - script: |

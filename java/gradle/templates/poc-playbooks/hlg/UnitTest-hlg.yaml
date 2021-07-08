@@ -21,8 +21,18 @@ stages:
           version2 | gradle | "$(Agent.OS)"
         path: /home/vsts/.gradle/caches/
       displayName: Gradle Caching
+    - task: Gradle@2
+      inputs:
+        workingDirectory: ''
+        gradleWrapperFile: 'gradlew'
+        cwd: --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) 
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.11'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: false
+        testResultsFiles: '**/TEST-*.xml'
+        tasks: 'test'
     - script: |
-        ./gradlew --build-cache test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch)  
         ./gradlew --stop
       failOnStderr: true    
-      displayName: Build Test
+      displayName: Gradle Stop
