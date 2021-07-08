@@ -32,9 +32,16 @@ stages:
           version2 | gradle | "$(Agent.OS)"
         path: /home/vsts/.gradle/caches/
       displayName: Gradle Caching
-    - script: |
-        ./gradlew --build-cache build -x test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=uber-jar -Dquarkus.jib.base-native-image=registry.access.redhat.com/ubi8/ubi-minimal    
-      failOnStderr: true 
+    - task: Gradle@2
+      inputs:
+        workingDirectory: ''
+        gradleWrapperFile: 'gradlew'
+        options: --build-cache -x test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=$(packageType) -Dquarkus.jib.base-native-image=$(dockerBaseImage) 
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.11'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: false
+        tasks: 'build'
       displayName: Build
     - task: Cache@2
       inputs:
@@ -48,11 +55,21 @@ stages:
       failOnStderr: true
       displayName: Save Docker image
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
+    - task: Gradle@2
+      inputs:
+        workingDirectory: ''
+        gradleWrapperFile: 'gradlew'
+        options: --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -PurlArtifactsMaven=$(urlArtifactsMaven) -PfeedArtifactsMaven=$(feedArtifactsMaven) -PuserPublish=$(organizationName) -PkeyPublish=$(accessTokenMaven) -Dquarkus.package.type=$(packageType)
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.11'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: false
+        tasks: 'publish'
+      displayName: Artifacts
     - script: |
-        ./gradlew --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -PurlArtifactsMaven=$(urlArtifactsMaven) -PfeedArtifactsMaven=$(feedArtifactsMaven) -PuserPublish=$(organizationName) -PkeyPublish=$(accessTokenMaven) -Dquarkus.package.type=uber-jar publish
         ./gradlew --stop
       failOnStderr: true
-      displayName: Artifacts
+      displayName: Gradle Stop
     - script: |
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(GitVersion.MajorMinorPatch)' '$(containerRegistry)/$(imageRepository)_hlg:$(GitVersion.MajorMinorPatch)-hlg'
         sudo docker tag '$(containerRegistry)/$(imageRepository):$(GitVersion.MajorMinorPatch)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
