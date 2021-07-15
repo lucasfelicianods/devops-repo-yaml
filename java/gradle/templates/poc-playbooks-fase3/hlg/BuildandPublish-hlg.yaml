@@ -51,6 +51,7 @@ stages:
     - script: |
         docker image ls
         mkdir -p /home/vsts/.docker
+        ls -la /home/vsts/.docker
         docker save -o /home/vsts/.docker/cache.tar $(dockerBaseImage)
       failOnStderr: true
       displayName: Save Docker image
