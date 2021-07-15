@@ -45,6 +45,7 @@ stages:
     - script: |
         docker image ls
         mkdir -p $(Pipeline.Workspace)/.docker
+        ls -la $(Pipeline.Workspace)
         ls -la $(Pipeline.Workspace)/.docker
         docker save -o $(Pipeline.Workspace)/.docker/cache.tar $(dockerBaseImage)
       failOnStderr: true
