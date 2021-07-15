@@ -9,7 +9,7 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - checkout: $(projectId)
+    - checkout: '$(projectId)'
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
@@ -29,7 +29,7 @@ stages:
     - task: Cache@2
       inputs:
         key: |
-          'gradle | $(Agent.OS) | **/build.gradle'
+          'gradle | "$(Agent.OS)" | **/build.gradle'
         path: /home/vsts/.gradle/caches/
       displayName: Gradle Caching
     - task: Gradle@2

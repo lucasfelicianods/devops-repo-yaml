@@ -41,7 +41,7 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - checkout: $(projectId)
+    - checkout: '$(projectId)'
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
