@@ -42,12 +42,6 @@ stages:
         publishJUnitResults: false
         tasks: 'build'
       displayName: Build
-    - task: Cache@2
-      inputs:
-        key: 'docker | cache'
-        path: $(Pipeline.Workspace)/.docker
-        cacheHitVar: DOCKER_CACHE_HIT
-      displayName: Cache Docker images
     - script: |
         docker image ls
         mkdir -p $(Pipeline.Workspace)/.docker
