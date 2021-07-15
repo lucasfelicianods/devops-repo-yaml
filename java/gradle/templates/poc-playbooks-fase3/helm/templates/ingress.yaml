@@ -1,6 +1,6 @@
 {{- if not .Values.openshift.enabled -}}
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "cqg.fullname" . -}}
+{{- $fullName := include "cqg" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "cqg.fullname" . }}
+  name: {{ include "cqg" . }}
   labels:
 {{ include "cqg.labels" . | indent 4 }}
   annotations:
