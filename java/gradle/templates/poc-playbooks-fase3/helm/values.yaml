@@ -11,8 +11,8 @@ image:
   pullPolicy: Always
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: "cqg"
+fullnameOverride: "cqg"
 
 environment: "Homolog"
 
