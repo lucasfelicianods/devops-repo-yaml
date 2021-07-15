@@ -17,10 +17,7 @@ stages:
       displayName: Use GitVersion
     - task: Cache@2
       inputs:
-        key: 'gradle | $(Agent.OS) | **/build.gradle'
-        restoreKeys: |
-          gradle | $(Agent.OS)
-          gradle
+        key: '$(Build.SourcesDirectory)/build.gradle'
         path: $(Pipeline.Workspace)/.gradle
       displayName: Gradle Caching
     - task: Gradle@2
