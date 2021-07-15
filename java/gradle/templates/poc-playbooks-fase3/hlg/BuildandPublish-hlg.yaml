@@ -50,8 +50,7 @@ stages:
       displayName: Cache Docker images
     - script: |
         mkdir -p /home/vsts/.docker
-        docker save -o /home/vsts/.docker/cache.tar cache
-      failOnStderr: true
+        docker save -o /home/vsts/.docker/cache.tar $(dockerBaseImage)
       displayName: Save Docker image
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
     - task: Gradle@2
