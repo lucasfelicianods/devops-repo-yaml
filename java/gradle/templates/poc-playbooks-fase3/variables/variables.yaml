@@ -1,0 +1,7 @@
+variables:
+- group: group-acr
+- group: group-macmiller
+- group: group-poc-playbooks-fase3
+- group: group-general
+- group: group-artifacts
+- group: group-3scale

@@ -1,0 +1,39 @@
+stages:
+- stage: UnitTest
+  displayName: Unit Test
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:
+  - job: UnitTest
+    displayName: Unit Test
+    pool:
+      vmImage: '$(vmImageAZ)'
+    steps:
+    - checkout: poc-playbooks
+    - task: gitversion/setup@0
+      displayName: Install GitTools
+      inputs:
+        versionSpec: '5.6.8'
+    - task: gitversion/execute@0
+      displayName: Use GitVersion
+    - task: Cache@2
+      inputs:
+        key: |
+          version2 | gradle | "$(Agent.OS)"
+        path: /home/vsts/.gradle/caches/
+      displayName: Gradle Caching
+    - task: Gradle@2
+      inputs:
+        workingDirectory: ''
+        gradleWrapperFile: 'gradlew'
+        options: --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) 
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.11'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/TEST-*.xml'
+        tasks: 'test'
+      displayName: Build Test
+    - script: |
+        ./gradlew --stop
+      failOnStderr: true    
+      displayName: Gradle Stop

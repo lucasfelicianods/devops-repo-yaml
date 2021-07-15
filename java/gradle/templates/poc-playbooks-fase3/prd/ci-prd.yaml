@@ -1,13 +1,18 @@
 stages:
 - stage: TagAndPush
   displayName: Tag And Push
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/hotfix/'))
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'))
   jobs:
+  - deployment: Approval
+    displayName: Approval
+    environment: poc-playbooks
   - job: TagAndPush
+    dependsOn: Approval
     displayName: Tag And Push
     pool:
       vmImage: $(vmImageAZ)
     steps:
+    - checkout: poc-playbooks
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
@@ -18,8 +23,9 @@ stages:
         sudo az login -u '$(azLoginACR)' -p '$(azSenhaACR)' -t '$(tenantId)'
         sudo az acr login --name '$(containerRegistryAbreviado)'
         sudo docker pull '$(containerRegistry)/$(imageRepository)_hlg:latest'
-        sudo docker tag '$(containerRegistry)/$(imageRepository)_hlg:latest' '$(containerRegistry)/$(imageRepository)_prd:$(tag1)'
+        sudo docker tag '$(containerRegistry)/$(imageRepository)_hlg:latest' '$(containerRegistry)/$(imageRepository)_prd:$(GitVersion.MajorMinorPatch)'
         sudo docker tag '$(containerRegistry)/$(imageRepository)_hlg:latest' '$(containerRegistry)/$(imageRepository)_prd:latest'
+      failOnStderr: true
       displayName: Tagging
 
     - task: Docker@2
@@ -28,7 +34,7 @@ stages:
         containerRegistry: '$(dockerRegistryServiceConnection)'
         repository: '$(imageRepository)_prd'
         command: 'push'
-        tags: '$(tag1)'
+        tags: '$(GitVersion.MajorMinorPatch)'
 
     - task: Docker@2
       displayName: Push ACR latest
