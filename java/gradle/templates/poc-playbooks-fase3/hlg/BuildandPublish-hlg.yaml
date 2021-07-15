@@ -50,7 +50,7 @@ stages:
       displayName: Cache Docker images
     - script: |
         mkdir -p /home/vsts/.docker
-        docker save -o /home/vsts/.docker/cache.tar $(dockerBaseImage)
+        docker save -o /home/vsts/.docker/cache.tar cache
       failOnStderr: true
       displayName: Save Docker image
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
