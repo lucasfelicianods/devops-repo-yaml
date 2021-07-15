@@ -18,7 +18,10 @@ stages:
     - task: Cache@2
       inputs:
         key: 'gradle | "$(Agent.OS)" | **/build.gradle'
-        path: $(Pipeline.Workspace)/.gradle/caches/
+        restoreKeys: |
+          gradle | "$(Agent.OS)"
+          gradle
+        path: $(Pipeline.Workspace)/.gradle
       displayName: Gradle Caching
     - task: Gradle@2
       inputs:
