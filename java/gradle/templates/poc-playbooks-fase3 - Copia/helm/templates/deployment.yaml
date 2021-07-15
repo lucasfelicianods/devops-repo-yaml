@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "camel-quarkus-gradle.fullname" . }}
+  labels:
+{{ include "camel-quarkus-gradle.labels" . | indent 4 }}
+  annotations:
+    sidecar.jaegertracing.io/inject: "false"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "camel-quarkus-gradle.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "camel-quarkus-gradle.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: {{ .Values.volumes.name }}
+          secret: 
+            secretName: {{ .Values.volumes.secret.secretName }}
+            defaultMode: {{ .Values.volumes.secret.defaultMode }}           
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /api
+              port: 8080
+              scheme: HTTP
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3          
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            timeoutSeconds: 3
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            timeoutSeconds: 3
+            initialDelaySeconds: 7
+          env:
+            - name: ENVIRONMENT
+              value: "{{ .Values.environment }}"
+            - name: TZ
+              value: America/Sao_Paulo
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: {{ .Values.volumeMounts.name }}
+              mountPath: {{ .Values.volumeMounts.mountPath }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.envFrom.configMapRef.name }}
+            - secretRef:
+                name: {{ .Values.envFrom.secretRef.name}}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

@@ -3,11 +3,11 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{ include ".fullname" . }}
+  name: {{ include "camel-quarkus-gradle.fullname" . }}
 spec:
   to:
     kind: Service
-    name: {{ include ".fullname" . }}
+    name: {{ include "camel-quarkus-gradle.fullname" . }}
   tls:
     insecureEdgeTerminationPolicy: Allow
     termination: edge
