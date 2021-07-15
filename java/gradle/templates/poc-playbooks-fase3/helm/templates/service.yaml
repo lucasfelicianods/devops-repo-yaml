@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "camel-quarkus-gradle.fullname" . }}
+  name: {{ include "cqg.fullname" . }}
   labels:
-{{ include "camel-quarkus-gradle.labels" . | indent 4 }}
+{{ include "cqg.labels" . | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -12,5 +12,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "camel-quarkus-gradle.name" . }}
+    app.kubernetes.io/name: {{ include "cqg.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

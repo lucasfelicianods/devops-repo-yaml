@@ -3,11 +3,11 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{ include ".fullname" . }}
+  name: {{ include "cqg.fullname" . }}
 spec:
   to:
     kind: Service
-    name: {{ include ".fullname" . }}
+    name: {{ include "cqg.fullname" . }}
   tls:
     insecureEdgeTerminationPolicy: Allow
     termination: edge

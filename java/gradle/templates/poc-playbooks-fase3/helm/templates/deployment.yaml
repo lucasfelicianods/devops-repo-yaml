@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "camel-quarkus-gradle.fullname" . }}
+  name: {{ include "cqg.fullname" . }}
   labels:
-{{ include "camel-quarkus-gradle.labels" . | indent 4 }}
+{{ include "cqg.labels" . | indent 4 }}
   annotations:
     sidecar.jaegertracing.io/inject: "false"
 spec:
@@ -11,7 +11,7 @@ spec:
   revisionHistoryLimit: {{ .Values.revisionHistoryCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "camel-quarkus-gradle.name" . }}
+      app.kubernetes.io/name: {{ include "cqg.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   strategy:
     rollingUpdate:
@@ -21,7 +21,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "camel-quarkus-gradle.name" . }}
+        app.kubernetes.io/name: {{ include "cqg.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       volumes:
