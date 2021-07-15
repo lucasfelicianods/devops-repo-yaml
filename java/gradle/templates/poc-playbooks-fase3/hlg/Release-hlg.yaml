@@ -6,7 +6,7 @@ stages:
   jobs:
   - deployment: Approval
     displayName: Approval
-    environment: poc-playbooks
+    environment: $(projectId)
   - job: CheckOutHelmRepo
     dependsOn: Approval
     displayName: Helm Check
