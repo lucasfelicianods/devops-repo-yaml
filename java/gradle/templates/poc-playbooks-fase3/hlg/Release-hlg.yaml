@@ -6,7 +6,7 @@ stages:
   jobs:
   - deployment: Approval
     displayName: Approval
-    environment: $(projectId)
+    environment: '$(projectId)'
   - job: CheckOutHelmRepo
     dependsOn: Approval
     displayName: Helm Check
@@ -41,7 +41,7 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - checkout: '$(projectId)'
+    - checkout: poc-playbooks-fase3
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
