@@ -19,17 +19,17 @@ stages:
     - task: Cache@2
       inputs:
         key: 'docker | cache'
-        path: /home/vsts/.docker
+        path: $(Pipeline.Workspace)/.docker
         cacheHitVar: DOCKER_CACHE_HIT
       displayName: Cache Docker images
     - script: |
-        docker load -i /home/vsts/.docker/cache.tar
+        docker load -i $(Pipeline.Workspace)/.docker/cache.tar
       displayName: Restore Docker image
       condition: and(not(canceled()), eq(variables.DOCKER_CACHE_HIT, 'true'))
     - task: Cache@2
       inputs:
         key: 'gradle | "$(Agent.OS)" | **/build.gradle'
-        path: /home/vsts/.gradle/caches/
+        path: $(Pipeline.Workspace)/.gradle/caches/
       displayName: Gradle Caching
     - task: Gradle@2
       inputs:
@@ -45,14 +45,14 @@ stages:
     - task: Cache@2
       inputs:
         key: 'docker | cache'
-        path: /home/vsts/.docker
+        path: $(Pipeline.Workspace)/.docker
         cacheHitVar: DOCKER_CACHE_HIT
       displayName: Cache Docker images
     - script: |
         docker image ls
-        mkdir -p /home/vsts/.docker
-        ls -la /home/vsts/.docker
-        docker save -o /home/vsts/.docker/cache.tar $(dockerBaseImage)
+        mkdir -p $(Pipeline.Workspace)/.docker
+        ls -la $(Pipeline.Workspace)/.docker
+        docker save -o $(Pipeline.Workspace)/.docker/cache.tar $(dockerBaseImage)
       failOnStderr: true
       displayName: Save Docker image
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
