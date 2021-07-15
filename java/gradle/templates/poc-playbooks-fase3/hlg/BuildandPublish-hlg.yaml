@@ -40,13 +40,6 @@ stages:
           gradle
         path: $(Pipeline.Workspace)/.gradle
       displayName: Gradle Caching
-    - script: |
-        ls -la $(Pipeline.Workspace)
-        ls -la $(Pipeline.Workspace)/.gradle
-        sudo ls -la $(Pipeline.Workspace)/.gradle/caches
-        sudo ls -la $(Pipeline.Workspace)/.gradle/caches/build-cache-1
-      failOnStderr: true
-      displayName: Test
     - task: Gradle@2
       inputs:
         gradleWrapperFile: 'gradlew'
@@ -62,10 +55,6 @@ stages:
       failOnStderr: true
       displayName: Gradle Stop
     - script: |
-        ls -la $(Pipeline.Workspace)
-        ls -la $(Pipeline.Workspace)/.gradle
-        ls -la $(Pipeline.Workspace)/.gradle/caches
-        ls -la $(Pipeline.Workspace)/.gradle/caches/build-cache-1
         mkdir -p $(Pipeline.Workspace)/.docker
         docker save -o $(Pipeline.Workspace)/.docker/cache.tar $(dockerBaseImage)
       failOnStderr: true
