@@ -35,7 +35,7 @@ stages:
     - task: Cache@2
       inputs:
         key: 'v1 | gradle | $(Agent.OS) | $(Build.Repository.LocalPath)/build.gradle'
-        path: $(Pipeline.Workspace)/.gradle
+        path: /home/vsts/.gradle/caches/
       displayName: Gradle Caching
     - task: Gradle@2
       inputs:
