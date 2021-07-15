@@ -34,17 +34,17 @@ stages:
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
     - task: Cache@2
       inputs:
-        key: 'gradle | "$(Agent.OS)" | **/build.gradle'
+        key: 'gradle | $(Agent.OS) | **/build.gradle'
         restoreKeys: |
-          gradle | "$(Agent.OS)"
+          gradle | $(Agent.OS)
           gradle
         path: $(Pipeline.Workspace)/.gradle
       displayName: Gradle Caching
     - script: |
         ls -la $(Pipeline.Workspace)
         ls -la $(Pipeline.Workspace)/.gradle
-        ls -la $(Pipeline.Workspace)/.gradle/caches
-        ls -la $(Pipeline.Workspace)/.gradle/caches/build-cache-1
+        sudo ls -la $(Pipeline.Workspace)/.gradle/caches
+        sudo ls -la $(Pipeline.Workspace)/.gradle/caches/build-cache-1
       failOnStderr: true
       displayName: Test
     - task: Gradle@2
