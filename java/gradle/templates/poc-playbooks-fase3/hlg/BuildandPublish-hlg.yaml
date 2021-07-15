@@ -34,7 +34,7 @@ stages:
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
     - task: Cache@2
       inputs:
-        key: 'gradle | $(Build.SourcesDirectory)/build.gradle'
+        key: 'gradle | $(Agent.OS) | $(Build.Repository.LocalPath)/build.gradle'
         path: $(Pipeline.Workspace)/.gradle
       displayName: Gradle Caching
     - task: Gradle@2
