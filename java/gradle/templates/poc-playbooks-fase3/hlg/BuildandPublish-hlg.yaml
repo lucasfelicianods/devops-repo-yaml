@@ -39,7 +39,6 @@ stages:
       displayName: Gradle Caching
     - task: Gradle@2
       inputs:
-        workingDirectory: ''
         gradleWrapperFile: 'gradlew'
         options: --build-cache -x test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=$(packageType) -Dquarkus.jib.base-native-image=$(dockerBaseImage) 
         javaHomeOption: 'JDKVersion'
@@ -48,6 +47,10 @@ stages:
         publishJUnitResults: false
         tasks: 'build'
       displayName: Build
+    - script: |
+        ./gradlew --stop
+      failOnStderr: true
+      displayName: Gradle Stop
     - script: |
         mkdir -p $(Pipeline.Workspace)/.docker
         docker save -o $(Pipeline.Workspace)/.docker/cache.tar $(dockerBaseImage)
