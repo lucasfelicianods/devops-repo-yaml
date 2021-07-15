@@ -49,10 +49,7 @@ stages:
         tasks: 'build'
       displayName: Build
     - script: |
-        docker image ls
         mkdir -p $(Pipeline.Workspace)/.docker
-        ls -la $(Pipeline.Workspace)
-        ls -la $(Pipeline.Workspace)/.docker
         docker save -o $(Pipeline.Workspace)/.docker/cache.tar $(dockerBaseImage)
       failOnStderr: true
       displayName: Save Docker image
