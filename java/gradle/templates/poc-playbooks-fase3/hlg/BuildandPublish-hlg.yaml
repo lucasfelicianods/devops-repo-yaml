@@ -35,6 +35,9 @@ stages:
     - task: Cache@2
       inputs:
         key: 'gradle | "$(Agent.OS)" | **/build.gradle'
+        restoreKeys: |
+          gradle | "$(Agent.OS)"
+          gradle
         path: $(Pipeline.Workspace)/.gradle
       displayName: Gradle Caching
     - task: Gradle@2
@@ -48,6 +51,10 @@ stages:
         tasks: 'build'
       displayName: Build
     - script: |
+        ./gradlew --stop
+      failOnStderr: true
+      displayName: Gradle Stop
+    - script: |
         mkdir -p $(Pipeline.Workspace)/.docker
         docker save -o $(Pipeline.Workspace)/.docker/cache.tar $(dockerBaseImage)
       failOnStderr: true
@@ -55,7 +62,6 @@ stages:
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
     - task: Gradle@2
       inputs:
-        workingDirectory: ''
         gradleWrapperFile: 'gradlew'
         options: --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -PurlArtifactsMaven=$(urlArtifactsMaven) -PfeedArtifactsMaven=$(feedArtifactsMaven) -PuserPublish=$(organizationName) -PkeyPublish=$(accessTokenMaven) -Dquarkus.package.type=$(packageType)
         javaHomeOption: 'JDKVersion'
