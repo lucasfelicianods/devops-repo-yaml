@@ -5,6 +5,10 @@ stages:
   jobs:
   - job: SonarCloud
     displayName: SonarCloud
+    pool:
+      vmImage: '$(vmImageAZ)'
+    steps:
+    - checkout: poc-playbooks-fase3
     - task: SonarCloudPrepare@1
       inputs:
         SonarCloud: 'sc-sonarcloud'
