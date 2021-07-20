@@ -15,7 +15,7 @@ stages:
         organization: 'ArquiteturaCorporativaLight'
         scannerMode: 'Other'
     - script: |
-        ./gradlew sonarqube
+        ./gradlew sonarqube -Dsonar.host.url=$(sonarHostUrl) -Dsonar.login=$(sonarLogin) -Dsonar.organization=$(sonarOrganization) -Dsonar.projectkey=$(sonarProjectKey)
       failOnStderr: true    
       displayName: Gradle sonarqube
     - task: SonarCloudAnalyze@1
