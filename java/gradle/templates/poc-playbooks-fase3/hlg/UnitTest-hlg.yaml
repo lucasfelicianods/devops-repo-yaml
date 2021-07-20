@@ -3,6 +3,17 @@ stages:
   displayName: Unit Test
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:
+  - job: SonarCloud
+    displayname: SonarCloud
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'sc-sonarcloud'
+        organization: 'arquiteturacorporativalight'
+        scannerMode: 'Other'
+    - task: SonarCloudPublish@1
+      inputs:
+        pollingTimeoutSec: '300'
+    - task: SonarCloudAnalyze@1
   - job: UnitTest
     displayName: Unit Test
     pool:
