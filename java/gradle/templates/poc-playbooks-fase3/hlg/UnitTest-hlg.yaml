@@ -14,17 +14,8 @@ stages:
         SonarCloud: 'sc-sonarcloud'
         organization: 'arquiteturacorporativalight'
         scannerMode: 'Other'
-    - task: Gradle@2
-      inputs:
-        gradleWrapperFile: 'gradlew'
-        options: --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) 
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.11'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: false
-        tasks: 'sonarqube'
-      displayName: Build SonarCloud
     - script: |
+        ./gradlew sonarqube
         ./gradlew --stop
       failOnStderr: true    
       displayName: Gradle Stop
