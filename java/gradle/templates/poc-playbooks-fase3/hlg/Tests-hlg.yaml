@@ -52,6 +52,7 @@ stages:
         ./gradlew --stop
       failOnStderr: true    
       displayName: Gradle Stop
+    - task: SonarCloudAnalyze@1
     - task: SonarCloudPublish@1
       inputs:
         pollingTimeoutSec: '300'
