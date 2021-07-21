@@ -5,7 +5,6 @@ stages:
   jobs:    
   - job: UnitTest
     displayName: Unit Test
-    dependsOn: CodeAnalysis
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
