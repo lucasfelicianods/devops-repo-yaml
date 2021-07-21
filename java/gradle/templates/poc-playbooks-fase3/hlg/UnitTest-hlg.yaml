@@ -13,9 +13,10 @@ stages:
       inputs:
         SonarCloud: 'sc-sonarcloud'
         organization: 'arquiteturacorporativalight'
-        scannerMode: 'MSBuild'
-        projectKey: 'poc-playbooks-fase3'
-        projectName: 'poc-playbooks-fase3'
+        scannerMode: 'Other'
+        extraProperties: |
+            sonar.projectName=poc-playbooks-fase3
+            sonar.projectKey=poc-playbooks-fase3        
     - task: SonarCloudAnalyze@1
     - task: SonarCloudPublish@1
       inputs:
