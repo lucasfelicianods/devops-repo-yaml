@@ -2,25 +2,7 @@ stages:
 - stage: Tests
   displayName: Tests
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-  jobs:
-  - job: CodeAnalysis
-    displayName: Code Analysis
-    pool:
-      vmImage: '$(vmImageAZ)'
-    steps:
-    - checkout: poc-playbooks-fase3
-    - task: SonarCloudPrepare@1
-      inputs:
-        SonarCloud: 'sc-sonarcloud'
-        organization: 'arquiteturacorporativalight'
-        scannerMode: 'Other'
-        extraProperties: |
-            sonar.projectName=poc-playbooks-fase3
-            sonar.projectKey=poc-playbooks-fase3        
-    - task: SonarCloudAnalyze@1
-    - task: SonarCloudPublish@1
-      inputs:
-        pollingTimeoutSec: '300'
+  jobs:    
   - job: UnitTest
     displayName: Unit Test
     dependsOn: CodeAnalysis
@@ -39,6 +21,14 @@ stages:
         key: 'v1 | gradle | $(Agent.OS) | $(Build.Repository.LocalPath)/build.gradle'
         path: /home/vsts/.gradle/caches/
       displayName: Gradle Caching
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'sc-sonarcloud'
+        organization: 'arquiteturacorporativalight'
+        scannerMode: 'Other'
+        extraProperties: |
+          sonar.projectName=poc-playbooks-fase3
+          sonar.projectKey=poc-playbooks-fase3  
     - task: Gradle@2
       inputs:
         workingDirectory: ''
@@ -50,8 +40,15 @@ stages:
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
         tasks: 'test'
+        sonarQubeRunAnalysis: true
+        sqGradlePluginVersionChoice: 'build'
+        checkStyleRunAnalysis: true
+        findBugsRunAnalysis: true
       displayName: Build Test
     - script: |
         ./gradlew --stop
       failOnStderr: true    
       displayName: Gradle Stop
+    - task: SonarCloudPublish@1
+      inputs:
+        pollingTimeoutSec: '300'
