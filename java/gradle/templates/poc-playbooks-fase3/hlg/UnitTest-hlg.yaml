@@ -1,14 +1,32 @@
 stages:
-- stage: UnitTest
-  displayName: Unit Test
+- stage: Tests
+  displayName: Tests
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:
+  - job: CodeAnalysis
+  displayName: Code Analysis
+  pool:
+    vmImage: '$(vmImageAZ)'
+  steps:
+  - checkout: poc-playbooks-fase3
   - job: UnitTest
     displayName: Unit Test
+    dependsOn: CodeAnalysis
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
     - checkout: poc-playbooks-fase3
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'sc-sonarcloud'
+        organization: 'arquiteturacorporativalight'
+        scannerMode: 'MSBuild'
+        projectKey: 'poc-playbooks-fase3'
+        projectName: 'poc-playbooks-fase3'
+    - task: SonarCloudAnalyze@1
+    - task: SonarCloudPublish@1
+      inputs:
+        pollingTimeoutSec: '300'
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
