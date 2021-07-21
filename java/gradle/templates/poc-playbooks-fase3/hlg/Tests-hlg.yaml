@@ -3,8 +3,8 @@ stages:
   displayName: Tests
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:    
-  - job: UnitTest
-    displayName: Unit Test
+  - job: Tests
+    displayName: Tests
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
@@ -42,7 +42,11 @@ stages:
         sonarQubeRunAnalysis: true
         sqGradlePluginVersionChoice: 'build'
         checkStyleRunAnalysis: true
-        findBugsRunAnalysis: false
+        findBugsRunAnalysis: true
+        pmdRunAnalysis: true
+        #spotBugsAnalysis: true
+        #spotBugsGradlePluginVersionChoice: 'specify'
+        #spotbugsGradlePluginVersion: '4.7.0'
       displayName: Build Test
     - script: |
         ./gradlew --stop
