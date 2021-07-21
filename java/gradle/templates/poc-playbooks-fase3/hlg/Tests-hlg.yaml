@@ -26,8 +26,8 @@ stages:
         organization: 'arquiteturacorporativalight'
         scannerMode: 'Other'
         extraProperties: |
-          sonar.projectName=poc-playbooks-fase3
-          sonar.projectKey=poc-playbooks-fase3  
+          sonar.projectName=$(projectId)
+          sonar.projectKey=$(projectId)  
     - task: Gradle@2
       inputs:
         workingDirectory: ''
