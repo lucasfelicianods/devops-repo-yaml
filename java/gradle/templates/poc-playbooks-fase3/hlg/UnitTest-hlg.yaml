@@ -42,7 +42,7 @@ stages:
         sonarQubeRunAnalysis: true
         sqGradlePluginVersionChoice: 'build'
         checkStyleRunAnalysis: true
-        findBugsRunAnalysis: true
+        findBugsRunAnalysis: false
       displayName: Build Test
     - script: |
         ./gradlew --stop
