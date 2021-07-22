@@ -1,7 +1,7 @@
 stages:
 - stage: BuildandPublish
   displayName: Build and Publish
-  dependsOn: UnitTest
+  dependsOn: Tests
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   jobs:
   - job: BuildandPublish
@@ -9,7 +9,7 @@ stages:
     pool:
       vmImage: '$(vmImageAZ)'
     steps:
-    - checkout: poc-playbooks
+    - checkout: poc-playbooks-fase3
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:
@@ -31,15 +31,14 @@ stages:
         docker pull $(dockerBaseImage)
       displayName: Download Docker image
       failOnStderr: true
+      condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
     - task: Cache@2
       inputs:
-        key: |
-          version2 | gradle | "$(Agent.OS)"
+        key: 'v1 | gradle | $(Agent.OS) | $(Build.Repository.LocalPath)/build.gradle'
         path: /home/vsts/.gradle/caches/
       displayName: Gradle Caching
     - task: Gradle@2
       inputs:
-        workingDirectory: ''
         gradleWrapperFile: 'gradlew'
         options: --build-cache -x test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=$(packageType) -Dquarkus.jib.base-native-image=$(dockerBaseImage) 
         javaHomeOption: 'JDKVersion'
@@ -56,7 +55,6 @@ stages:
       condition: and(not(canceled()), or(failed(), ne(variables.DOCKER_CACHE_HIT, 'true')))
     - task: Gradle@2
       inputs:
-        workingDirectory: ''
         gradleWrapperFile: 'gradlew'
         options: --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -PurlArtifactsMaven=$(urlArtifactsMaven) -PfeedArtifactsMaven=$(feedArtifactsMaven) -PuserPublish=$(organizationName) -PkeyPublish=$(accessTokenMaven) -Dquarkus.package.type=$(packageType)
         javaHomeOption: 'JDKVersion'

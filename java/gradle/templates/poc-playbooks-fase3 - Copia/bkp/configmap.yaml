@@ -1,7 +1,0 @@
-﻿kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: poc-playbooks-cfg-map
-  namespace: poc-playbooks-hlg
-data:
-  SSL_KEYSTORE_FILE: /tmp/certificate/keystore.jks

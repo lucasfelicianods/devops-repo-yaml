@@ -1,0 +1,60 @@
+stages:
+- stage: Tests
+  displayName: Tests
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  jobs:    
+  - job: Tests
+    displayName: Tests
+    pool:
+      vmImage: '$(vmImageAZ)'
+    steps:
+    - checkout: poc-playbooks-fase3
+    - task: gitversion/setup@0
+      displayName: Install GitTools
+      inputs:
+        versionSpec: '5.6.8'
+    - task: gitversion/execute@0
+      displayName: Use GitVersion
+    - task: Cache@2
+      inputs:
+        key: 'v1 | gradle | $(Agent.OS) | $(Build.Repository.LocalPath)/build.gradle'
+        path: /home/vsts/.gradle/caches/
+      displayName: Gradle Caching
+    - task: SonarCloudPrepare@1
+      displayName: SonarCloud Connection
+      inputs:
+        SonarCloud: 'sc-sonarcloud'
+        organization: 'arquiteturacorporativalight'
+        scannerMode: 'Other'
+        extraProperties: |
+          sonar.projectName=$(projectId)
+          sonar.projectKey=$(projectId)  
+    - task: Gradle@2
+      inputs:
+        workingDirectory: ''
+        gradleWrapperFile: 'gradlew'
+        options: --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) 
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.11'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/TEST-*.xml'
+        tasks: 'test'
+        sonarQubeRunAnalysis: true
+        sqGradlePluginVersionChoice: 'build'
+        checkStyleRunAnalysis: true
+        pmdRunAnalysis: true
+      displayName: Build Test
+    - script: |
+        ./gradlew --stop
+      failOnStderr: true    
+      displayName: Gradle Stop
+    - task: SonarCloudPublish@1
+      displayName: SonarCloud Analysis Publish
+      inputs:
+        pollingTimeoutSec: '300'
+    - task: sonarcloud-buildbreaker@2
+      displayName: SonarCloud Analysis Verify
+      inputs:
+        SonarCloud: 'sc-sonarcloud'
+        organization: 'arquiteturacorporativalight'

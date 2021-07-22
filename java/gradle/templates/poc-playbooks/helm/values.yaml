@@ -6,15 +6,15 @@ replicaCount: 2
 revisionHistoryCount: 5
 
 image:
-  repository: lightregistry.azurecr.io/camel-quarkus-gradle-ci_prd:latest
+  repository: lightregistry.azurecr.io/poc-playbooks-fase3_hlg
   tag: latest
   pullPolicy: Always
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: "light"
+fullnameOverride: "light"
 
-environment: "Homolog"
+environment: "hlg"
 
 public_hostname: enviroment.domain.com
 

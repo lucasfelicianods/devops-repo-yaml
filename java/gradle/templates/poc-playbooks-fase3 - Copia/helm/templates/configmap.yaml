@@ -1,7 +1,0 @@
-﻿kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: poc-playbooks-cfg-map
-data:
-  PRNER_BB_BOLETOS_HOST: api.hm.bb.com.br/cobrancas/v2/boletos
-  SSL_KEYSTORE_FILE: /tmp/certificate/keystore.jks

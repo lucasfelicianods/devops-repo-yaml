@@ -1,6 +1,0 @@
-variables:
-- group: group-acr
-- group: group-macmiller
-- group: group-camel-quarkus-gradle-ci
-- group: group-general
-- group: group-artifacts
