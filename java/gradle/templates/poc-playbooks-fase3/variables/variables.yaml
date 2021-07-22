@@ -2,6 +2,14 @@ variables:
 - group: group-acr
 - group: group-macmiller
 - group: group-poc-playbooks-fase3
-- group: group-general
 - group: group-artifacts
 - group: group-3scale
+#group-general
+- name: projectId
+  value: $(system.teamProject)
+- name: vmImageAZ
+  value: ubuntu-20.04
+- name: organizationName
+  value: LightDevOps
+- name: imageRepository
+  value: $(system.teamProject)
