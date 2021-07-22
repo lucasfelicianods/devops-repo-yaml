@@ -1,9 +1,5 @@
 variables:
-- group: group-acr
-- group: group-macmiller
-- group: group-poc-playbooks-fase3
-- group: group-artifacts
-- group: group-3scale
+- group: group-accounts-passwords-tokens
 #group-general
 - name: projectId
   value: $(system.teamProject)
@@ -13,3 +9,32 @@ variables:
   value: LightDevOps
 - name: imageRepository
   value: $(system.teamProject)
+#group-3scale
+- name: 3scaleRemoteInstance
+  value: 3scale-light
+- name: issuerType
+  value: keycloak
+- name: jobCreateApplication
+  value: job_create_application.yml
+- name: jobCreateApplicationPlan
+  value: job_create_application_plan.yml
+- name: jobImportApi
+  value: job_import_api.yml
+- name: jobPromoteApi
+  value: job_promove_api.yml
+- name: oidcIssuer
+  value: https://3scale-admin:9c303da7-1ce8-4cb4-bc63-a60feb5d851b@keycloak-rh-sso.apps.aro-cluster-002.grupolight.local/auth/realms/light-realm
+- name: openApiDir
+  value: /artifacts/openApi.json
+#group-acr
+- name: containerRegistry
+  value: lightregistry.azurecr.io
+- name: containerRegistryAbreviado
+  value: lightregistry
+- name: dockerRegistryServiceConnection
+  value: sc-lightregistry
+#group-artifacts
+- name: feedArtifactsMaven
+  value: POCPlaybooks-maven
+- name: urlArtifactsMaven
+  value: https://pkgs.dev.azure.com/LightDevOps/_packaging/POCPlaybooks-maven/maven/v1
