@@ -27,14 +27,14 @@ variables:
 - name: openApiDir
   value: /artifacts/openApi.json
 #group-acr
-- name: containerRegistry
-  value: lightregistry.azurecr.io
-- name: containerRegistryAbreviado
+- name: containerRegistryFullName
+  value: azurecr.io
+- name: containerRegistryName
   value: lightregistry
 - name: dockerRegistryServiceConnection
   value: sc-lightregistry
 #group-artifacts
-- name: feedArtifactsMaven
-  value: POCPlaybooks-maven
-- name: urlArtifactsMaven
-  value: https://pkgs.dev.azure.com/LightDevOps/_packaging/POCPlaybooks-maven/maven/v1
+- name: feedArtifacts
+  value: Light
+- name: urlArtifacts
+  value: https://pkgs.dev.azure.com/LightDevOps/_packaging/Light/maven/v1
