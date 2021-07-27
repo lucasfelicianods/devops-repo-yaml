@@ -5,14 +5,14 @@ stages:
   jobs:
   - deployment: Approval
     displayName: Approval
-    environment: poc-playbooks
+    environment: poc-playbooks-fase3
   - job: TagAndPush
     dependsOn: Approval
     displayName: Tag And Push
     pool:
       vmImage: $(vmImageAZ)
     steps:
-    - checkout: poc-playbooks
+    - checkout: poc-playbooks-fase3
     - task: gitversion/setup@0
       displayName: Install GitTools
       inputs:

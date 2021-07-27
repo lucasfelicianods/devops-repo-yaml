@@ -21,10 +21,10 @@ stages:
       displayName: Use GitVersion  
     - script: |
         sudo az login -u '$(azLoginACR)' -p '$(azSenhaACR)' -t '$(tenantId)'
-        sudo az acr login --name '$(containerRegistryAbreviado)'
-        sudo docker pull '$(containerRegistry)/$(imageRepository)_hlg:latest'
-        sudo docker tag '$(containerRegistry)/$(imageRepository)_hlg:latest' '$(containerRegistry)/$(imageRepository)_prd:$(GitVersion.MajorMinorPatch)'
-        sudo docker tag '$(containerRegistry)/$(imageRepository)_hlg:latest' '$(containerRegistry)/$(imageRepository)_prd:latest'
+        sudo az acr login --name '$(containerRegistryName)'
+        sudo docker pull '$(containerRegistryFullName)/$(imageRepository)_hlg:latest'
+        sudo docker tag '$(containerRegistryFullName)/$(imageRepository)_hlg:latest' '$(containerRegistryFullName)/$(imageRepository)_prd:$(GitVersion.MajorMinorPatch)'
+        sudo docker tag '$(containerRegistryFullName)/$(imageRepository)_hlg:latest' '$(containerRegistryFullName)/$(imageRepository)_prd:latest'
       failOnStderr: true
       displayName: Tagging
 

@@ -40,7 +40,7 @@ stages:
     - task: Gradle@2
       inputs:
         gradleWrapperFile: 'gradlew'
-        options: --build-cache -x test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistry) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=$(packageType) -Dquarkus.jib.base-native-image=$(dockerBaseImage) 
+        options: --build-cache -x test -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -Dquarkus.container-image.build=true -Dquarkus.container-image.group=$(containerRegistryFullName) -Dquarkus.container-image.name=$(imageRepository) -Dquarkus.package.type=$(packageType) -Dquarkus.jib.base-native-image=$(dockerBaseImage) 
         javaHomeOption: 'JDKVersion'
         jdkVersionOption: '1.11'
         jdkArchitectureOption: 'x64'
@@ -56,7 +56,7 @@ stages:
     - task: Gradle@2
       inputs:
         gradleWrapperFile: 'gradlew'
-        options: --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -PurlArtifactsMaven=$(urlArtifactsMaven) -PfeedArtifactsMaven=$(feedArtifactsMaven) -PuserPublish=$(organizationName) -PkeyPublish=$(accessTokenMaven) -Dquarkus.package.type=$(packageType)
+        options: --build-cache -PartifactId=$(projectId) -Pversion=$(GitVersion.MajorMinorPatch) -PurlArtifactsMaven=$(urlArtifacts) -PfeedArtifactsMaven=$(feedArtifacts) -PuserPublish=$(organizationName) -PkeyPublish=$(accessTokenArtifacts) -Dquarkus.package.type=$(packageType)
         javaHomeOption: 'JDKVersion'
         jdkVersionOption: '1.11'
         jdkArchitectureOption: 'x64'
@@ -68,8 +68,8 @@ stages:
       failOnStderr: true
       displayName: Gradle Stop
     - script: |
-        sudo docker tag '$(containerRegistry)/$(imageRepository):$(GitVersion.MajorMinorPatch)' '$(containerRegistry)/$(imageRepository)_hlg:$(GitVersion.MajorMinorPatch)-hlg'
-        sudo docker tag '$(containerRegistry)/$(imageRepository):$(GitVersion.MajorMinorPatch)' '$(containerRegistry)/$(imageRepository)_hlg:latest'
+        sudo docker tag '$(containerRegistryFullName)/$(imageRepository):$(GitVersion.MajorMinorPatch)' '$(containerRegistryFullName)/$(imageRepository)_hlg:$(GitVersion.MajorMinorPatch)-hlg'
+        sudo docker tag '$(containerRegistryFullName)/$(imageRepository):$(GitVersion.MajorMinorPatch)' '$(containerRegistryFullName)/$(imageRepository)_hlg:latest'
       failOnStderr: true
       displayName: Tagging
     - task: Docker@2
