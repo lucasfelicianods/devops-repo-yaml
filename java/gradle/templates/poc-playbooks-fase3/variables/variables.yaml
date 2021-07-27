@@ -28,7 +28,7 @@ variables:
   value: /artifacts/openApi.json
 #group-acr
 - name: containerRegistryFullName
-  value: azurecr.io
+  value: lightregistry.azurecr.io
 - name: containerRegistryName
   value: lightregistry
 - name: dockerRegistryServiceConnection
