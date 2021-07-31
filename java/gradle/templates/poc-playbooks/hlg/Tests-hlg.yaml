@@ -40,7 +40,7 @@ stages:
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
         tasks: 'test'
-        sonarQubeRunAnalysis: true
+        sonarQubeRunAnalysis: false
         sqGradlePluginVersionChoice: 'build'
         checkStyleRunAnalysis: true
         pmdRunAnalysis: true
